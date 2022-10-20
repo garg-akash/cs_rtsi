@@ -42,7 +42,9 @@ public:
 	bool isConnected();
 	bool negotiateProtocolVersion();
 	void sendAll(const std::uint8_t &command, std::string payload = "");
+	void receive();
 
+	void sendStart();
 
 private:
 	std::string hostip_;

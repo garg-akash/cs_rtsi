@@ -1,4 +1,4 @@
-#include <cs_rtsi/robot_state>
+#include <cs_rtsi/robot_state.h>
 #include <unordered_map>
 
 std::unordered_map<std::string, rtsi_type_variant_> RobotState::state_types_ {
@@ -30,7 +30,7 @@ void RobotState::initRobotState(const std::vector<std::string> &variables)
   	{
     	if (state_types_.find(item) != state_types_.end())
     	{
-      		rtde_type_variant_ entry = state_types_[item];
+      		rtsi_type_variant_ entry = state_types_[item];
       		state_data_[item] = entry;
     	}
   	}

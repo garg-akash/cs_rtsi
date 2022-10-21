@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cs_rtsi/robot_state.h>
+
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/deadline_timer.hpp>
@@ -40,19 +42,37 @@ public:
 	void connect();
 	void disconnect();
 	bool isConnected();
+	bool isDataAvailable();
 	bool negotiateProtocolVersion();
 	void sendAll(const std::uint8_t &command, std::string payload = "");
+	void sendPause();
 	void receive();
+	boost::system::error_code receiveData(std::shared_ptr<RobotState> &robot_state);
 
 	void sendStart();
+	bool sendOutputSetup(const std::vector<std::string> &output_names, double frequency);
 
 private:
 	std::string hostip_;
 	int port_;
 	bool verbose_;
 	ConnectionState conn_state_;
+	std::vector<std::string> output_types_;
+	std::vector<std::string> output_names_;
 	boost::asio::io_service io_service_;
 	std::shared_ptr<boost::asio::ip::tcp::socket> socket_;
   	std::shared_ptr<boost::asio::ip::tcp::resolver> resolver_;
   	std::vector<char> buffer_;
+  	boost::asio::deadline_timer deadline_;
+
+  	/**
+  	 * Async socket read function with timeout.
+  	 * If no timeout is given (value < 0) then an internal default timeout
+  	 * value is used
+  	 * \return Bytes received
+  	 */
+  	template <typename AsyncReadStream, typename MutableBufferSequence>
+  	std::size_t async_read_some(AsyncReadStream& s, const MutableBufferSequence& buffers,
+  	                            boost::system::error_code &error, int timeout_ms = -1);
+
 };

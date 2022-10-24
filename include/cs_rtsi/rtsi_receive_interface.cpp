@@ -36,6 +36,7 @@ RTSIReceiveInterface::RTSIReceiveInterface(std::string hotsip, double frequency,
 
 	while(!robot_state_->getFirstStateReceived())
 	{
+		std::cout << "Waiting to get state\n";
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
 	}
 }
@@ -44,9 +45,7 @@ bool RTSIReceiveInterface::setupRecipes(const double& frequency)
 {
 	if(variables_.empty())
 	{
-		variables_ = {"timestamp",
-					  "actual_joint_positions",
-					  "actual_TCP_pose"};
+		variables_ = {"timestamp"};
 	}
 	// Setup output
   	rtsi_->sendOutputSetup(variables_, frequency);
@@ -62,8 +61,8 @@ void RTSIReceiveInterface::receiveCallback()
     	{
       		if (rtsi_->isDataAvailable())
       		{
-        	no_bytes_avail_cnt_ = 0;
-        	boost::system::error_code ec = rtsi_->receiveData(robot_state_);
+        		no_bytes_avail_cnt_ = 0;
+        		boost::system::error_code ec = rtsi_->receiveData(robot_state_);
         		if(ec)
         		{
           			if(ec == boost::asio::error::eof)
@@ -110,6 +109,15 @@ void RTSIReceiveInterface::receiveCallback()
 	}
 }
 
+double RTSIReceiveInterface::getTimestamp()
+{
+	double timestamp;
+	if(robot_state_->getStateData("timestamp", timestamp))
+		return timestamp;
+	else
+		throw std::runtime_error("unable to get state data for timestamp");
+}
+
 std::vector<double> RTSIReceiveInterface::getActualJointPositions()
 {
 	std::vector<double> actual_joint_positions;
@@ -117,4 +125,13 @@ std::vector<double> RTSIReceiveInterface::getActualJointPositions()
 		return actual_joint_positions;
 	else
 		throw std::runtime_error("unable to get state data for actual_joint_positions");
+}
+
+std::vector<double> RTSIReceiveInterface::getActualTCPPose()
+{
+	std::vector<double> actual_tcp_pose;
+	if (robot_state_->getStateData("actual_TCP_pose", actual_tcp_pose))
+	    return actual_tcp_pose;
+	else
+	    throw std::runtime_error("unable to get state data for actual_TCP_pose");
 }

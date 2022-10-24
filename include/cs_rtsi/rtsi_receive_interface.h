@@ -24,7 +24,12 @@ class RTSIReceiveInterface
 
     void receiveCallback();
 
+    double getTimestamp();
+    
     std::vector<double> getActualJointPositions();
+    
+    std::vector<double> getActualTCPPose();
+
 
  private:
  	std::string hostip_;

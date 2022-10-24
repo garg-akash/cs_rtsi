@@ -15,7 +15,7 @@
 #include <thread>
 
 const unsigned HEADER_SIZE = 3;
-#define RTSI_PROTOCOL_VERSION 2
+#define RTSI_PROTOCOL_VERSION 1
 #define DEBUG_OUTPUT true
 
 #if DEBUG_OUTPUT
@@ -117,7 +117,9 @@ bool RTSI::sendOutputSetup(const std::vector<std::string> &output_names, double 
   for (const auto &output_name : output_names)
     output_names_str += output_name + ",";
 
+  std::cout << "size 1 : " << freq_packed.size() << "\n";
   std::copy(output_names_str.begin(), output_names_str.end(), std::back_inserter(freq_packed));
+  std::cout << "size 2 : " << freq_packed.size() << "\n";
   std::string payload(std::begin(freq_packed), std::end(freq_packed));
   sendAll(cmd, payload);
   DEBUG("Done sending RTSI_CONTROL_PACKAGE_SETUP_OUTPUTS");
@@ -127,7 +129,7 @@ bool RTSI::sendOutputSetup(const std::vector<std::string> &output_names, double 
 
 void RTSI::sendAll(const std::uint8_t &command, std::string payload)
 {
-  DEBUG("Payload size is: " << payload.size());
+  DEBUG("Payload size is: " << payload.size()); //this is in bytes
   // Pack size and command into header
   uint16_t size = htons(HEADER_SIZE + (uint16_t)payload.size());
   uint8_t type = command;
@@ -141,14 +143,14 @@ void RTSI::sendAll(const std::uint8_t &command, std::string payload)
   // Create vector<char> that includes the header
   std::vector<char> header_packed;
   std::copy(buffer, buffer + sizeof(buffer), std::back_inserter(header_packed));
-  // std::cout << "header_packed: \n";
-  // for(auto a : header_packed)
-  // 	std::cout << a << "\n";
+  std::cout << "header_packed (size and type): \n";
+  for(auto a : header_packed)
+  	std::cout << a << "\n";
   // Add the payload to the header_packed vector
   std::copy(payload.begin(), payload.end(), std::back_inserter(header_packed));
-  // std::cout << "header_packed: \n";
-  // for(auto a : header_packed)
-  // 	std::cout << unsigned(a) << "\n";
+  std::cout << "header_packed (size, type and payload): \n";
+  for(auto a : header_packed)
+  	std::cout << unsigned(a) << "\n";
   std::string sent(header_packed.begin(), header_packed.end());
   // std::cout << "sent: " << sent << "\n";
   DEBUG("SENDING buf containing: " << sent << " with len: " << sent.size());
@@ -232,7 +234,7 @@ void RTSI::receive()
 	uint32_t message_offset = 0;
 	uint16_t msg_size = RTSIUtility::getUInt16(data, message_offset);
 	uint8_t msg_cmd = data.at(2);
-	std::cout << unsigned(data[0]) << " " << unsigned(data[1]) << "\n";
+	std::cout << unsigned(data[0]) << " " << unsigned(data[1]) << " " << msg_size << "\n";
 	DEBUG("Control Header: ")
 	DEBUG("size is: " << msg_size);
 	DEBUG("command is: " << static_cast<int>(msg_cmd));
@@ -251,9 +253,11 @@ void RTSI::receive()
 			}
 			break;
 		}
-
+		
 		case RTSI_REQUEST_PROTOCOL_VERSION:
 		{
+			uint8_t negotiate_result = data.at(0);
+			std::cout << "Protocol negotiate result : " << unsigned(negotiate_result) << "\n";
 			break;
 		}
 
@@ -279,6 +283,8 @@ void RTSI::receive()
 
 		case RTSI_CONTROL_PACKAGE_SETUP_OUTPUTS:
     {
+    	uint8_t subscription_id = data.at(0);
+			std::cout << "Subscription id : " << unsigned(subscription_id) << "\n";
       std::string datatypes(std::begin(data) + 1, std::end(data));
       DEBUG("Datatype:" << datatypes);
       output_types_ = RTSIUtility::split(datatypes, ',');

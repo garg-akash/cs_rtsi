@@ -18,7 +18,9 @@ class RTSIReceiveInterface
                          std::vector<std::string> variables = {},
                          bool verbose = false);
 
-	// virtual ~RTSIReceiveInterface();
+	virtual ~RTSIReceiveInterface();
+
+    void disconnect();
 
 	bool setupRecipes(const double& frequency);
 

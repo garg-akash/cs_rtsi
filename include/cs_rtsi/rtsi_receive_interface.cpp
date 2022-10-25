@@ -41,6 +41,27 @@ RTSIReceiveInterface::RTSIReceiveInterface(std::string hotsip, double frequency,
 	}
 }
 
+RTSIReceiveInterface::~RTSIReceiveInterface()
+{
+	disconnect();
+}
+
+void RTSIReceiveInterface::disconnect()
+{
+	stop_receive_thread = true;
+	th_->interrupt();
+	th_->join();
+
+	if(rtsi_ != nullptr)
+	{
+		if(rtsi_->isConnected())
+			rtsi_->disconnect();
+	}
+	
+	//waiting to disconnect fully
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+}
+
 bool RTSIReceiveInterface::setupRecipes(const double& frequency)
 {
 	if(variables_.empty())

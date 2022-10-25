@@ -17,6 +17,9 @@ file(GLOB SOURCES
 include_directories(
 	"include"
 	)
+link_directories(include/cs_rtsi/)
+
+add_subdirectory(include/cs_rtsi)
 
 find_package(Boost REQUIRED COMPONENTS system thread program_options)
 find_package(Threads)
@@ -27,4 +30,4 @@ target_link_libraries(connect_test Threads::Threads)
 
 add_executable(getData_test src/getData_test.cpp)
 
-target_link_libraries(getData_test Boost::thread)
+target_link_libraries(getData_test Boost::thread h_files)

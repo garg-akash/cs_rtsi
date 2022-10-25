@@ -1,3 +1,4 @@
+#include <cs_rtsi/robot_state.h>
 #include <cs_rtsi/rtsi.h>
 #include <cs_rtsi/rtsi_utility.h>
 
@@ -368,24 +369,26 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
 
   // Add data to the buffer
   buffer_.insert(buffer_.end(), data.begin(), data.begin() + data_len);
+  // std::cout << "In this !!!!!!!!!!!" << data_len << " ; " << buffer_.size() << "; "  << HEADER_SIZE << "\n";
 
   while (buffer_.size() >= HEADER_SIZE)
   {
     message_offset = 0;
     RTSIControlHeader packet_header = RTSIUtility::readRTSIHeader(buffer_, message_offset);
-    // std::cout << "RTSIControlHeader: " << std::endl;
-    // std::cout << "size is: " << packet_header.msg_size << std::endl;
-    // std::cout << "command is: " << static_cast<int>(packet_header.msg_cmd) << std::endl;
+    std::cout << "RTSIControlHeader: " << std::endl;
+    std::cout << "size is: " << packet_header.msg_size << std::endl;
+    std::cout << "command is: " << static_cast<int>(packet_header.msg_cmd) << std::endl;
 
     if (buffer_.size() >= packet_header.msg_size)
     {
       // Read data package and adjust buffer
       std::vector<char> packet(buffer_.begin() + HEADER_SIZE, buffer_.begin() + packet_header.msg_size);
       buffer_.erase(buffer_.begin(), buffer_.begin() + packet_header.msg_size);
-
+      // std::cout << "After erase buffer size is : " << buffer_.size() << "\n";
       if (buffer_.size() >= HEADER_SIZE && packet_header.msg_cmd == RTSI_DATA_PACKAGE)
       {
         RTSIControlHeader next_packet_header = RTSIUtility::readRTSIHeader(buffer_, message_offset);
+        // std::cout << "2nd if " << static_cast<int>(next_packet_header.msg_cmd) << std::endl;
         if (next_packet_header.msg_cmd == RTSI_DATA_PACKAGE)
         {
           if (verbose_)
@@ -397,9 +400,9 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
       if (packet_header.msg_cmd == RTSI_DATA_PACKAGE)
       {
         packet_data_offset = 0;
-        RTSIUtility::getUChar(packet, packet_data_offset);
-
-        // robot_state->lockUpdateStateMutex();
+        char subs_id = RTSIUtility::getUChar(packet, packet_data_offset);
+        std::cout << "subscription_id : " << unsigned(subs_id) << "\n";
+        robot_state->lockUpdateStateMutex();
 
         // Read all the variables specified by the user.
         for (const auto &output_name : output_names_)
@@ -409,6 +412,7 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
             rtsi_type_variant_ entry = robot_state->state_types_[output_name];
             if (entry.type() == typeid(std::vector<double>))
             {
+              std::cout << "Parsing 6D\n";
               std::vector<double> parsed_data;
               // if (output_name == "actual_tool_accelerometer" || output_name == "payload_cog" ||
               //     output_name == "elbow_position" || output_name == "elbow_velocity")
@@ -416,9 +420,13 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
               // else
                 parsed_data = RTSIUtility::unpackVector6d(packet, packet_data_offset);
               robot_state->setStateData(output_name, parsed_data);
+              // for(auto p : parsed_data)
+              // 	std::cout << p << "\t";
+              // std::cout << "\n";
             }
             else if (entry.type() == typeid(double))
             {
+              std::cout << "Parsing 1D\n";
               double parsed_data = RTSIUtility::getDouble(packet, packet_data_offset);
               robot_state->setStateData(output_name, parsed_data);
             }
@@ -452,7 +460,7 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
         if (!robot_state->getFirstStateReceived())
           robot_state->setFirstStateReceived(true);
 
-        // robot_state->unlockUpdateStateMutex();
+        robot_state->unlockUpdateStateMutex();
       }
       else
       {

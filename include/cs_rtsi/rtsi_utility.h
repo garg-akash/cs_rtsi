@@ -27,17 +27,28 @@ class RTSIUtility
   {
   	double output;
 
-  	((char *)(&output))[7] = data[message_offset];
-  	((char *)(&output))[6] = data[message_offset + 1];
-  	((char *)(&output))[5] = data[message_offset + 2];
-  	((char *)(&output))[4] = data[message_offset + 3];
-  	((char *)(&output))[3] = data[message_offset + 4];
-  	((char *)(&output))[2] = data[message_offset + 5];
-  	((char *)(&output))[1] = data[message_offset + 6];
-  	((char *)(&output))[0] = data[message_offset + 7];
+  	((char *)(&output))[0] = data[message_offset];
+  	((char *)(&output))[1] = data[message_offset + 1];
+  	((char *)(&output))[2] = data[message_offset + 2];
+  	((char *)(&output))[3] = data[message_offset + 3];
+  	((char *)(&output))[4] = data[message_offset + 4];
+  	((char *)(&output))[5] = data[message_offset + 5];
+  	((char *)(&output))[6] = data[message_offset + 6];
+  	((char *)(&output))[7] = data[message_offset + 7];
   
   	message_offset += 8;
   	return output;
+  }
+
+  static inline std::vector<double> unpackVector3d(const std::vector<char> &data, uint32_t &message_offset)
+  {
+  	std::vector<double> vector_3d;
+  	for(unsigned int i = 0; i < 3; i++)
+  	{
+  		double d = getDouble(data, message_offset);
+  		vector_3d.push_back(d);
+  	}
+  	return vector_3d;
   }
 
   static inline std::vector<double> unpackVector6d(const std::vector<char> &data, uint32_t &message_offset)
@@ -50,6 +61,7 @@ class RTSIUtility
   	}
   	return vector_6d;
   }
+
   static inline unsigned char getUChar(const std::vector<char> &data, uint32_t &message_offset)
   {
   	unsigned char output = data[message_offset];
@@ -72,6 +84,57 @@ class RTSIUtility
 
 		return output;
 	}
+
+	static inline uint32_t getUInt32(const std::vector<char> &data, uint32_t &message_offset)
+  {
+    uint32_t output = 0;
+    ((char *)(&output))[0] = data[message_offset];
+    ((char *)(&output))[1] = data[message_offset + 1];
+    ((char *)(&output))[2] = data[message_offset + 2];
+    ((char *)(&output))[3] = data[message_offset + 3];
+    message_offset += 4;
+
+    return output;
+  }
+
+  static inline uint64_t getUInt64(const std::vector<char> &data, uint32_t &message_offset)
+  {
+    uint64_t output;
+
+    ((char *)(&output))[0] = data[message_offset];
+    ((char *)(&output))[1] = data[message_offset + 1];
+    ((char *)(&output))[2] = data[message_offset + 2];
+    ((char *)(&output))[3] = data[message_offset + 3];
+    ((char *)(&output))[4] = data[message_offset + 4];
+    ((char *)(&output))[5] = data[message_offset + 5];
+    ((char *)(&output))[6] = data[message_offset + 6];
+    ((char *)(&output))[7] = data[message_offset + 7];
+
+    message_offset += 8;
+    return output;
+  }
+
+  static inline int32_t getInt32(const std::vector<char> &data, uint32_t &message_offset)
+  {
+    int32_t output = 0;
+    ((char *)(&output))[0] = data[message_offset];
+    ((char *)(&output))[1] = data[message_offset + 1];
+    ((char *)(&output))[2] = data[message_offset + 2];
+    ((char *)(&output))[3] = data[message_offset + 3];
+    message_offset += 4;
+    return output;
+  }
+
+	static inline std::vector<int32_t> unpackVector6Int32(const std::vector<char> &data, uint32_t &message_offset)
+  {
+    std::vector<int32_t> vector_6_int32;
+    for (unsigned int i = 0; i < 6; i++)
+    {
+      int32_t int32_value = getInt32(data, message_offset);
+      vector_6_int32.push_back(int32_value);
+    }
+    return vector_6_int32;
+  }
 
 	static inline std::vector<std::string> split(const std::string &s, char delimiter)
   {

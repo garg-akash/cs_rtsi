@@ -30,4 +30,4 @@ target_link_libraries(connect_test Threads::Threads)
 
 add_executable(getData_test src/getData_test.cpp)
 
-target_link_libraries(getData_test Boost::thread h_files)
+target_link_libraries(getData_test Boost::thread)

@@ -26,12 +26,33 @@ class RTSIReceiveInterface
 
     void receiveCallback();
 
+    double getPayloadMass();
+
+    std::vector<double> getPayloadCog();
+
+    uint32_t getScriptControlLine();
+
     double getTimestamp();
+
+    std::vector<double> getTargetJointPositions();
+
+    std::vector<double> getTargetJointSpeeds();
+
+    std::vector<double> getTargetJointTorques();
     
     std::vector<double> getActualJointPositions();
+
+    std::vector<double> getActualJointSpeeds();
+
+    std::vector<double> getActualJointCurrent();
     
     std::vector<double> getActualTCPPose();
 
+    std::vector<double> getActualTCPSpeed();
+
+    std::vector<double> getTargetTCPPose();
+
+    std::vector<double> getTargetTCPSpeed();
 
  private:
  	std::string hostip_;

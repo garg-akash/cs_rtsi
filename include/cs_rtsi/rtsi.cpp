@@ -412,17 +412,18 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
             rtsi_type_variant_ entry = robot_state->state_types_[output_name];
             if (entry.type() == typeid(std::vector<double>))
             {
-              std::cout << "Parsing 6D\n";
               std::vector<double> parsed_data;
-              // if (output_name == "actual_tool_accelerometer" || output_name == "payload_cog" ||
-              //     output_name == "elbow_position" || output_name == "elbow_velocity")
-              //   parsed_data = RTSIUtility::unpackVector3d(packet, packet_data_offset);
-              // else
+              if (output_name == "payload_cog" || output_name == "elbow_position")
+              {  
+                parsed_data = RTSIUtility::unpackVector3d(packet, packet_data_offset);
+              	std::cout << "Parsing 3D\n";
+              }
+              else
+              {  
                 parsed_data = RTSIUtility::unpackVector6d(packet, packet_data_offset);
+              	std::cout << "Parsing 6D\n";
+              }
               robot_state->setStateData(output_name, parsed_data);
-              // for(auto p : parsed_data)
-              // 	std::cout << p << "\t";
-              // std::cout << "\n";
             }
             else if (entry.type() == typeid(double))
             {
@@ -430,26 +431,26 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
               double parsed_data = RTSIUtility::getDouble(packet, packet_data_offset);
               robot_state->setStateData(output_name, parsed_data);
             }
-            // else if (entry.type() == typeid(int32_t))
-            // {
-            //   int32_t parsed_data = RTSIUtility::getInt32(packet, packet_data_offset);
-            //   robot_state->setStateData(output_name, parsed_data);
-            // }
-            // else if (entry.type() == typeid(uint32_t))
-            // {
-            //   uint32_t parsed_data = RTSIUtility::getUInt32(packet, packet_data_offset);
-            //   robot_state->setStateData(output_name, parsed_data);
-            // }
-            // else if (entry.type() == typeid(uint64_t))
-            // {
-            //   uint64_t parsed_data = RTSIUtility::getUInt64(packet, packet_data_offset);
-            //   robot_state->setStateData(output_name, parsed_data);
-            // }
-            // else if (entry.type() == typeid(std::vector<int32_t>))
-            // {
-            //   std::vector<int32_t> parsed_data = RTSIUtility::unpackVector6Int32(packet, packet_data_offset);
-            //   robot_state->setStateData(output_name, parsed_data);
-            // }
+            else if (entry.type() == typeid(int32_t))
+            {
+              int32_t parsed_data = RTSIUtility::getInt32(packet, packet_data_offset);
+              robot_state->setStateData(output_name, parsed_data);
+            }
+            else if (entry.type() == typeid(uint32_t))
+            {
+              uint32_t parsed_data = RTSIUtility::getUInt32(packet, packet_data_offset);
+              robot_state->setStateData(output_name, parsed_data);
+            }
+            else if (entry.type() == typeid(uint64_t))
+            {
+              uint64_t parsed_data = RTSIUtility::getUInt64(packet, packet_data_offset);
+              robot_state->setStateData(output_name, parsed_data);
+            }
+            else if (entry.type() == typeid(std::vector<int32_t>))
+            {
+              std::vector<int32_t> parsed_data = RTSIUtility::unpackVector6Int32(packet, packet_data_offset);
+              robot_state->setStateData(output_name, parsed_data);
+            }
           }
           else
           {

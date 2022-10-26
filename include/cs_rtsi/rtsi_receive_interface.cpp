@@ -23,7 +23,7 @@ RTSIReceiveInterface::RTSIReceiveInterface(std::string hotsip, double frequency,
 	rtsi_ = std::make_shared<RTSI>(hostip_, port_, verbose_);
 	rtsi_->connect();
 	rtsi_->negotiateProtocolVersion();
-	frequency_ = 250;
+	// frequency_ = frequency;
 	delta_time_ = 1 / frequency_;
 
 	setupRecipes(frequency_);
@@ -130,6 +130,33 @@ void RTSIReceiveInterface::receiveCallback()
 	}
 }
 
+double RTSIReceiveInterface::getPayloadMass()
+{
+  double payload_mass;
+  if (robot_state_->getStateData("payload_mass", payload_mass))
+    return payload_mass;
+  else
+    throw std::runtime_error("unable to get state data for payload_mass");
+}
+
+std::vector<double> RTSIReceiveInterface::getPayloadCog()
+{
+  std::vector<double> payload_cog;
+  if (robot_state_->getStateData("payload_cog", payload_cog))
+    return payload_cog;
+  else
+    throw std::runtime_error("unable to get state data for payload_cog");
+}
+
+uint32_t RTSIReceiveInterface::getScriptControlLine()
+{
+  uint32_t script_control_line;
+  if (robot_state_->getStateData("script_control_line", script_control_line))
+    return script_control_line;
+  else
+    throw std::runtime_error("unable to get state data for script_control_line");
+}
+
 double RTSIReceiveInterface::getTimestamp()
 {
 	double timestamp;
@@ -137,6 +164,33 @@ double RTSIReceiveInterface::getTimestamp()
 		return timestamp;
 	else
 		throw std::runtime_error("unable to get state data for timestamp");
+}
+
+std::vector<double> RTSIReceiveInterface::getTargetJointPositions()
+{
+	std::vector<double> target_joint_positions;
+	if (robot_state_->getStateData("target_joint_positions", target_joint_positions))
+		return target_joint_positions;
+	else
+		throw std::runtime_error("unable to get state data for target_joint_positions");
+}
+
+std::vector<double> RTSIReceiveInterface::getTargetJointSpeeds()
+{
+	std::vector<double> target_joint_speeds;
+	if (robot_state_->getStateData("target_joint_speeds", target_joint_speeds))
+		return target_joint_speeds;
+	else
+		throw std::runtime_error("unable to get state data for target_joint_speeds");
+}
+
+std::vector<double> RTSIReceiveInterface::getTargetJointTorques()
+{
+	std::vector<double> target_joint_torques;
+	if (robot_state_->getStateData("target_joint_torques", target_joint_torques))
+		return target_joint_torques;
+	else
+		throw std::runtime_error("unable to get state data for target_joint_torques");
 }
 
 std::vector<double> RTSIReceiveInterface::getActualJointPositions()
@@ -148,6 +202,24 @@ std::vector<double> RTSIReceiveInterface::getActualJointPositions()
 		throw std::runtime_error("unable to get state data for actual_joint_positions");
 }
 
+std::vector<double> RTSIReceiveInterface::getActualJointSpeeds()
+{
+	std::vector<double> actual_joint_speeds;
+	if (robot_state_->getStateData("actual_joint_speeds", actual_joint_speeds))
+		return actual_joint_speeds;
+	else
+		throw std::runtime_error("unable to get state data for actual_joint_speeds");
+}
+
+std::vector<double> RTSIReceiveInterface::getActualJointCurrent()
+{
+	std::vector<double> actual_joint_current;
+	if (robot_state_->getStateData("actual_joint_current", actual_joint_current))
+		return actual_joint_current;
+	else
+		throw std::runtime_error("unable to get state data for actual_joint_current");
+}
+
 std::vector<double> RTSIReceiveInterface::getActualTCPPose()
 {
 	std::vector<double> actual_tcp_pose;
@@ -155,4 +227,31 @@ std::vector<double> RTSIReceiveInterface::getActualTCPPose()
 	    return actual_tcp_pose;
 	else
 	    throw std::runtime_error("unable to get state data for actual_TCP_pose");
+}
+
+std::vector<double> RTSIReceiveInterface::getActualTCPSpeed()
+{
+	std::vector<double> actual_tcp_speed;
+	if (robot_state_->getStateData("actual_TCP_speed", actual_tcp_speed))
+	    return actual_tcp_speed;
+	else
+	    throw std::runtime_error("unable to get state data for actual_TCP_speed");
+}
+
+std::vector<double> RTSIReceiveInterface::getTargetTCPPose()
+{
+	std::vector<double> target_tcp_pose;
+	if (robot_state_->getStateData("target_TCP_pose", target_tcp_pose))
+	    return target_tcp_pose;
+	else
+	    throw std::runtime_error("unable to get state data for target_TCP_pose");
+}
+
+std::vector<double> RTSIReceiveInterface::getTargetTCPSpeed()
+{
+	std::vector<double> target_tcp_speed;
+	if (robot_state_->getStateData("target_TCP_speed", target_tcp_speed))
+	    return target_tcp_speed;
+	else
+	    throw std::runtime_error("unable to get state data for target_TCP_speed");
 }

@@ -1,7 +1,5 @@
 #include <cs_rtsi/rtsi.h>
-#include <cs_rtsi/rtsi.cpp>
 #include <cs_rtsi/robot_state.h>
-#include <cs_rtsi/robot_state.cpp>
 
 const int PORT = 30004;
 const bool VERBOSE = true;

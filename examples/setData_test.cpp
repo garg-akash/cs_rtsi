@@ -12,10 +12,10 @@ int main(int argc, char const *argv[])
   // rtsi_io.setStandardDigitalOut(9, true);
   // rtsi_io.setSpeedSlider(1);
   // rtsi_io.setInputDoubleRegister(18,0.3);
-  // rtsi_io.setStandardDigitalOut(7, false);
   // rtsi_io.setStandardDigitalOut(3, true);
-  rtsi_io.setConfigurableDigitalOut(0, true);
-  // std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  // rtsi_io.setConfigurableDigitalOut(7, true);
+  rtsi_io.setStandardDigitalOut(10, true);
+    // std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
   std::cout << "Digital pin set\n";
 

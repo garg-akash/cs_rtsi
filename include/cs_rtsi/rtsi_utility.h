@@ -180,8 +180,8 @@ class RTSIUtility
   static inline std::vector<char> packUInt16(uint16_t uint16)
   {
     std::vector<char> result;
-    result.push_back(uint16 >> 8);
     result.push_back(uint16);
+    result.push_back(uint16 >> 8);
     return result;
   }
 

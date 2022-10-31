@@ -217,15 +217,12 @@ void RTSI::send(const RobotCommand &robot_cmd)
 
   if (robot_cmd.type_ == RobotCommand::SET_STD_DIGITAL_OUT)
   {
-    std::cout << "Comes here...............\n" << robot_cmd.std_digital_out_mask_ << "\t" << robot_cmd.std_digital_out_ << "\n";
     std::vector<char> std_digital_out_mask_packed = RTSIUtility::packUInt16(robot_cmd.std_digital_out_mask_);
     std::vector<char> std_digital_out_packed = RTSIUtility::packUInt16(robot_cmd.std_digital_out_);
     cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_digital_out_mask_packed.begin()),
                       std::make_move_iterator(std_digital_out_mask_packed.end()));
     cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_digital_out_packed.begin()),
                       std::make_move_iterator(std_digital_out_packed.end()));
-    // cmd_packed.push_back(robot_cmd.std_digital_out_mask_);
-    // cmd_packed.push_back(robot_cmd.std_digital_out_);
   }
 
   if (robot_cmd.type_ == RobotCommand::SET_CONF_DIGITAL_OUT)

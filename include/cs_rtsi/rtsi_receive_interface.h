@@ -22,7 +22,7 @@ class RTSIReceiveInterface
 
     void disconnect();
 
-	bool setupRecipes(const double& frequency);
+	bool setupOutputRecipes(const double& frequency);
 
     void receiveCallback();
 

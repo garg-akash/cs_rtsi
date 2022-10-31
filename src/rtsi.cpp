@@ -104,6 +104,18 @@ bool RTSI::negotiateProtocolVersion()
   return true;
 }
 
+bool RTSI::sendInputSetup(const std::vector<std::string> &input_names)
+{
+  std::uint8_t cmd = RTSI_CONTROL_PACKAGE_SETUP_INPUTS;
+  std::string input_names_str;
+  for (const auto &input_name : input_names)
+    input_names_str += input_name + ",";
+  sendAll(cmd, input_names_str);
+  DEBUG("Done sending RTSI_CONTROL_PACKAGE_SETUP_INPUTS");
+  receive();
+  return true;
+}
+
 bool RTSI::sendOutputSetup(const std::vector<std::string> &output_names, double frequency)
 {
   std::uint8_t cmd = RTSI_CONTROL_PACKAGE_SETUP_OUTPUTS;
@@ -128,8 +140,137 @@ bool RTSI::sendOutputSetup(const std::vector<std::string> &output_names, double 
   return true;
 }
 
+void RTSI::send(const RobotCommand &robot_cmd)
+{
+  std::uint8_t command = RTSI_DATA_PACKAGE;
+  std::vector<char> cmd_packed;
+  cmd_packed = RTSIUtility::packInt32(robot_cmd.type_);
+
+  // if (robot_cmd.type_ == RobotCommand::FT_RTSI_INPUT_ENABLE ||
+  //     robot_cmd.type_ == RobotCommand::ENABLE_EXTERNAL_FT_SENSOR)
+  // {
+  //   std::vector<char> ft_rtsi_input_enable_packed = RTSIUtility::packInt32(robot_cmd.ft_rtsi_input_enable_);
+  //   cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(ft_rtsi_input_enable_packed.begin()),
+  //                     std::make_move_iterator(ft_rtsi_input_enable_packed.end()));
+  // }
+
+  // if (robot_cmd.type_ == RobotCommand::FREEDRIVE_MODE)
+  // {
+  //   std::vector<char> free_axes_packed = RTSIUtility::packVectorNInt32(robot_cmd.free_axes_);
+  //   cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(free_axes_packed.begin()),
+  //                     std::make_move_iterator(free_axes_packed.end()));
+  // }
+
+  if (robot_cmd.type_ == RobotCommand::SET_INPUT_INT_REGISTER)
+  {
+    std::vector<char> reg_int_packed = RTSIUtility::packInt32(robot_cmd.reg_int_val_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(reg_int_packed.begin()),
+                      std::make_move_iterator(reg_int_packed.end()));
+  }
+
+  if (robot_cmd.type_ == RobotCommand::SET_INPUT_DOUBLE_REGISTER)
+  {
+    std::cout << "Comes here...............\n" << robot_cmd.reg_double_val_ << "\n";
+    std::vector<char> reg_double_packed = RTSIUtility::packDouble(robot_cmd.reg_double_val_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(reg_double_packed.begin()),
+                      std::make_move_iterator(reg_double_packed.end()));
+  }
+
+  if (robot_cmd.type_ == RobotCommand::WATCHDOG)
+  {
+    cmd_packed = RTSIUtility::packInt32(RobotCommand::NO_CMD);
+  }
+
+  // if (robot_cmd.type_ == RobotCommand::FORCE_MODE)
+  // {
+  //   std::vector<char> force_mode_type_packed = RTSIUtility::packInt32(robot_cmd.force_mode_type_);
+  //   cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(force_mode_type_packed.begin()),
+  //                     std::make_move_iterator(force_mode_type_packed.end()));
+
+  //   std::vector<char> sel_vector_packed = RTSIUtility::packVectorNInt32(robot_cmd.selection_vector_);
+  //   cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(sel_vector_packed.begin()),
+  //                     std::make_move_iterator(sel_vector_packed.end()));
+  // }
+
+  // if (robot_cmd.type_ == RobotCommand::GET_ACTUAL_JOINT_POSITIONS_HISTORY)
+  // {
+  //   std::vector<char> actual_joint_positions_history_packed = RTSIUtility::packUInt32(robot_cmd.steps_);
+  //   cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(actual_joint_positions_history_packed.begin()),
+  //                     std::make_move_iterator(actual_joint_positions_history_packed.end()));
+  // }
+
+  if (!robot_cmd.val_.empty())
+  {
+    std::vector<char> vector_nd_packed = RTSIUtility::packVectorNd(robot_cmd.val_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(vector_nd_packed.begin()),
+                      std::make_move_iterator(vector_nd_packed.end()));
+  }
+
+  // if (robot_cmd.type_ == RobotCommand::MOVEJ || robot_cmd.type_ == RobotCommand::MOVEJ_IK ||
+  //     robot_cmd.type_ == RobotCommand::MOVEL || robot_cmd.type_ == RobotCommand::MOVEL_FK ||
+  //     robot_cmd.type_ == RobotCommand::MOVE_PATH)
+  // {
+  //   std::vector<char> async_packed = RTSIUtility::packInt32(robot_cmd.async_);
+  //   cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(async_packed.begin()),
+  //                     std::make_move_iterator(async_packed.end()));
+  // }
+
+  if (robot_cmd.type_ == RobotCommand::SET_STD_DIGITAL_OUT)
+  {
+    std::cout << "Comes here...............\n" << robot_cmd.std_digital_out_mask_ << "\t" << robot_cmd.std_digital_out_ << "\n";
+    std::vector<char> std_digital_out_mask_packed = RTSIUtility::packUInt16(robot_cmd.std_digital_out_mask_);
+    std::vector<char> std_digital_out_packed = RTSIUtility::packUInt16(robot_cmd.std_digital_out_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_digital_out_mask_packed.begin()),
+                      std::make_move_iterator(std_digital_out_mask_packed.end()));
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_digital_out_packed.begin()),
+                      std::make_move_iterator(std_digital_out_packed.end()));
+    // cmd_packed.push_back(robot_cmd.std_digital_out_mask_);
+    // cmd_packed.push_back(robot_cmd.std_digital_out_);
+  }
+
+  if (robot_cmd.type_ == RobotCommand::SET_CONF_DIGITAL_OUT)
+  {
+    cmd_packed.push_back(robot_cmd.configurable_digital_out_mask_);
+    cmd_packed.push_back(robot_cmd.configurable_digital_out_);
+  }
+
+  // if (robot_cmd.type_ == RobotCommand::SET_TOOL_DIGITAL_OUT)
+  // {
+  //   cmd_packed.push_back(robot_cmd.std_tool_out_mask_);
+  //   cmd_packed.push_back(robot_cmd.std_tool_out_);
+  // }
+
+  if (robot_cmd.type_ == RobotCommand::SET_SPEED_SLIDER)
+  {
+    std::cout << "Comes here...............\n" << robot_cmd.speed_slider_mask_ << " ; " << robot_cmd.speed_slider_fraction_ << "\n";
+    std::vector<char> speed_slider_mask_packed = RTSIUtility::packInt32(robot_cmd.speed_slider_mask_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(speed_slider_mask_packed.begin()),
+                      std::make_move_iterator(speed_slider_mask_packed.end()));
+
+    std::vector<char> speed_slider_fraction_packed = RTSIUtility::packDouble(robot_cmd.speed_slider_fraction_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(speed_slider_fraction_packed.begin()),
+                      std::make_move_iterator(speed_slider_fraction_packed.end()));
+  }
+
+  if (robot_cmd.type_ == RobotCommand::SET_STD_ANALOG_OUT)
+  {
+    cmd_packed.push_back(robot_cmd.std_analog_output_mask_);
+    cmd_packed.push_back(robot_cmd.std_analog_output_type_);
+    std::vector<char> std_analog_output_packed = RTSIUtility::packDouble(robot_cmd.std_analog_output_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_analog_output_packed.begin()),
+                      std::make_move_iterator(std_analog_output_packed.end()));
+  }
+
+  cmd_packed.insert(cmd_packed.begin(), robot_cmd.recipe_id_);
+  std::string sent(cmd_packed.begin(), cmd_packed.end());
+
+  sendAll(command, sent);
+  DEBUG("Done sending RTSI_DATA_PACKAGE");
+}
+
 void RTSI::sendAll(const std::uint8_t &command, std::string payload)
 {
+  DEBUG("Payload is: " << payload);
   DEBUG("Payload size is: " << payload.size()); //this is in bytes
   // Pack size and command into header
   uint16_t size = htons(HEADER_SIZE + (uint16_t)payload.size());

@@ -41,23 +41,27 @@ void RTSIIOInterface::disconnect()
 
 bool RTSIIOInterface::setupInputRecipes()
 {
-  // Recipe 1
-  std::vector<std::string> no_cmd_input = {inIntReg(23)};
-  rtsi_->sendInputSetup(no_cmd_input);
+  std::vector<std::string> ak_input = {"standard_digital_output_mask", "standard_digital_output",
+                                       "configurable_digital_output_mask", "configurable_digital_output"};
+  rtsi_->sendInputSetup(ak_input);
+
+  // // Recipe 1
+  // std::vector<std::string> no_cmd_input = {inIntReg(23)};
+  // rtsi_->sendInputSetup(no_cmd_input);
 
   // // Recipe 2
   // std::vector<std::string> set_speed_slider = {inIntReg(23), "speed_slider_mask", "speed_slider_fraction"};
   // rtsi_->sendInputSetup(set_speed_slider);
 
-  // Recipe 4
+  // // Recipe 4
   // std::vector<std::string> set_conf_digital_output = {inIntReg(23), "configurable_digital_output_mask",
   //                                                        "configurable_digital_output"};
   // rtsi_->sendInputSetup(set_conf_digital_output);
 
   // // Recipe 3
-  std::vector<std::string> set_std_digital_output = {inIntReg(23), "standard_digital_output_mask",
-                                                        "standard_digital_output"};
-  rtsi_->sendInputSetup(set_std_digital_output);
+  // std::vector<std::string> set_std_digital_output = {inIntReg(23), "standard_digital_output_mask",
+  //                                                       "standard_digital_output"};
+  // rtsi_->sendInputSetup(set_std_digital_output);
 
 
   // // Recipe 5
@@ -107,6 +111,36 @@ bool RTSIIOInterface::setupInputRecipes()
   // rtsi_->sendInputSetup(set_input_double_reg_4_input);
   
   return true;
+}
+
+bool RTSIIOInterface::setAKData(std::uint16_t std_digital_id, bool std_digital_level,
+                                  std::uint8_t conf_digital_id, bool conf_digital_level)
+{
+  RTSI::RobotCommand robot_cmd;
+  robot_cmd.type_ = RTSI::RobotCommand::Type::SET_AK_DATA;
+  robot_cmd.recipe_id_ = 1;
+  if (std_digital_level)
+  {
+    robot_cmd.std_digital_out_mask_ = static_cast<uint16_t>(1u << std_digital_id);
+    robot_cmd.std_digital_out_ = static_cast<uint16_t>(1u << std_digital_id);
+  }
+  else
+  {
+    robot_cmd.std_digital_out_mask_ = static_cast<uint16_t>(1u << std_digital_id);
+    robot_cmd.std_digital_out_ = 0;
+  }
+  if (conf_digital_level)
+  {
+    robot_cmd.configurable_digital_out_mask_ = static_cast<uint8_t>(1u << conf_digital_id);
+    robot_cmd.configurable_digital_out_ = static_cast<uint8_t>(1u << conf_digital_id);
+  }
+  else
+  {
+    robot_cmd.configurable_digital_out_mask_ = static_cast<uint8_t>(1u << conf_digital_id);
+    robot_cmd.configurable_digital_out_ = 0;
+  }
+
+  return sendCommand(robot_cmd);
 }
 
 bool RTSIIOInterface::setSpeedSlider(double speed)
@@ -162,18 +196,18 @@ bool RTSIIOInterface::setConfigurableDigitalOut(std::uint8_t output_id, bool sig
   return sendCommand(robot_cmd);
 }
 
-bool RTSIIOInterface::setAnalogOutput(std::uint8_t output_type, std::uint8_t output_id, double signal_ratio)
+bool RTSIIOInterface::setAnalogOutputVoltage(std::uint8_t output_id, double signal_ratio)
 {
   RTSI::RobotCommand robot_cmd;
   robot_cmd.type_ = RTSI::RobotCommand::Type::SET_STD_ANALOG_OUT;
   robot_cmd.recipe_id_ = 5;
   robot_cmd.std_analog_output_mask_ = static_cast<uint8_t>(1u << output_id);
-  robot_cmd.std_analog_output_type_ = output_type;  // set output type (0:Current; 1:voltage)
-  // if (output_id == 0)
-  //   robot_cmd.std_analog_output_0_ = signal_ratio;
-  // else if (output_id == 1)
-  //   robot_cmd.std_analog_output_1_ = signal_ratio;
-  robot_cmd.std_analog_output_ = signal_ratio;
+  robot_cmd.std_analog_output_type_ = 1;  // set output type (0:Current; 1:voltage)
+  if (output_id == 0)
+    robot_cmd.std_analog_output_0_ = signal_ratio;
+  else if (output_id == 1)
+    robot_cmd.std_analog_output_1_ = signal_ratio;
+  // robot_cmd.std_analog_output_ = signal_ratio;
   return sendCommand(robot_cmd);
 }
 

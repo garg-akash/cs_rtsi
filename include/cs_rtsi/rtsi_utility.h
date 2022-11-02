@@ -180,7 +180,7 @@ class RTSIUtility
   static inline std::vector<char> packUInt16(uint16_t uint16)
   {
     std::vector<char> result;
-    result.push_back(uint16);
+    result.push_back(uint16); //Tested OK
     result.push_back(uint16 >> 8);
     return result;
   }
@@ -261,9 +261,9 @@ class RTSIUtility
       char c[8];
     } in{}, out{};
     in.value = d;
-    std::cout << "D val : " << in.value << "\n";
-    for(auto i : in.c)
-    	std::cout << "c val : " << unsigned(i) << "\n";
+    // std::cout << "D val : " << in.value << "\n";
+    // for(auto i : in.c)
+    // 	std::cout << "c val : " << unsigned(i) << "\n";
     out.c[0] = in.c[7];
     out.c[1] = in.c[6];
     out.c[2] = in.c[5];
@@ -276,7 +276,7 @@ class RTSIUtility
     for (auto const &character : out.c)
       output.push_back(character);
     
-    std::cout << "D val : " << out.value << "\n";
+    // std::cout << "D val : " << out.value << "\n";
     return output;
   }
 };

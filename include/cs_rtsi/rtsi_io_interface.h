@@ -26,13 +26,15 @@ class RTSIIOInterface
 
    bool setConfigurableDigitalOut(std::uint8_t output_id, bool signal_level);
 
-   bool setAnalogOutput(std::uint8_t output_type, std::uint8_t output_id, double signal_ratio);
+   bool setAnalogOutputVoltage(std::uint8_t output_id, double signal_ratio);
 
    // bool setInputBitRegister(int input_id, std::int32_t value); //TODO
    
    bool setInputIntRegister(int input_id, std::int32_t value);
 
    bool setInputDoubleRegister(int input_id, double value);
+
+   bool setAKData(std::uint16_t output_id1, bool signal_level1, std::uint8_t output_id2, bool signal_level2);
 
  private:
  	std::string hostip_;

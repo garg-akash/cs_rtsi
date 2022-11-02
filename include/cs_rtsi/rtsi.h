@@ -84,6 +84,7 @@ public:
 	    // SET_GRAVITY = 59,
 	    WATCHDOG = 99,
 	    // STOP_SCRIPT = 255
+      SET_AK_DATA = 89
 	  };
 
 	  enum Recipe
@@ -109,11 +110,11 @@ public:
 	    RECIPE_19 = 19
 	  };
 
-	  RobotCommand() : type_(NO_CMD), recipe_id_(1)
-	  {
-	  }
+	  // RobotCommand() : type_(NO_CMD), recipe_id_(1)
+	  // {
+	  // }
 
-	  Type type_ = NO_CMD;
+	  Type type_;// = NO_CMD;
 	  std::uint8_t recipe_id_;
 	  // std::int32_t async_;
 	  // std::int32_t ft_rtsi_input_enable_;
@@ -131,8 +132,8 @@ public:
 	  // std::uint8_t std_tool_out_mask_;
 	  std::uint8_t std_analog_output_mask_;
 	  std::uint8_t std_analog_output_type_;
-	  double std_analog_output_;
-	  // double std_analog_output_1_;
+	  double std_analog_output_0_;
+	  double std_analog_output_1_;
 	  std::int32_t speed_slider_mask_;
 	  double speed_slider_fraction_;
 	  // std::uint32_t steps_;

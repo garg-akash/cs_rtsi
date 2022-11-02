@@ -144,7 +144,7 @@ void RTSI::send(const RobotCommand &robot_cmd)
 {
   std::uint8_t command = RTSI_DATA_PACKAGE;
   std::vector<char> cmd_packed;
-  cmd_packed = RTSIUtility::packInt32(robot_cmd.type_);
+  // cmd_packed = RTSIUtility::packInt32(robot_cmd.type_);
 
   // if (robot_cmd.type_ == RobotCommand::FT_RTSI_INPUT_ENABLE ||
   //     robot_cmd.type_ == RobotCommand::ENABLE_EXTERNAL_FT_SENSOR)
@@ -215,6 +215,19 @@ void RTSI::send(const RobotCommand &robot_cmd)
   //                     std::make_move_iterator(async_packed.end()));
   // }
 
+  if (robot_cmd.type_ == RobotCommand::SET_AK_DATA)
+  {
+    std::vector<char> std_digital_out_mask_packed = RTSIUtility::packUInt16(robot_cmd.std_digital_out_mask_);
+    std::vector<char> std_digital_out_packed = RTSIUtility::packUInt16(robot_cmd.std_digital_out_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_digital_out_mask_packed.begin()),
+                      std::make_move_iterator(std_digital_out_mask_packed.end()));
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_digital_out_packed.begin()),
+                      std::make_move_iterator(std_digital_out_packed.end()));
+
+    cmd_packed.push_back(robot_cmd.configurable_digital_out_mask_);
+    cmd_packed.push_back(robot_cmd.configurable_digital_out_);
+  }
+
   if (robot_cmd.type_ == RobotCommand::SET_STD_DIGITAL_OUT)
   {
     std::vector<char> std_digital_out_mask_packed = RTSIUtility::packUInt16(robot_cmd.std_digital_out_mask_);
@@ -253,9 +266,12 @@ void RTSI::send(const RobotCommand &robot_cmd)
   {
     cmd_packed.push_back(robot_cmd.std_analog_output_mask_);
     cmd_packed.push_back(robot_cmd.std_analog_output_type_);
-    std::vector<char> std_analog_output_packed = RTSIUtility::packDouble(robot_cmd.std_analog_output_);
-    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_analog_output_packed.begin()),
-                      std::make_move_iterator(std_analog_output_packed.end()));
+    std::vector<char> std_analog_output_0_packed = RTSIUtility::packDouble(robot_cmd.std_analog_output_0_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_analog_output_0_packed.begin()),
+                      std::make_move_iterator(std_analog_output_0_packed.end()));
+    std::vector<char> std_analog_output_1_packed = RTSIUtility::packDouble(robot_cmd.std_analog_output_1_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_analog_output_1_packed.begin()),
+                      std::make_move_iterator(std_analog_output_1_packed.end()));
   }
 
   cmd_packed.insert(cmd_packed.begin(), robot_cmd.recipe_id_);
@@ -408,7 +424,9 @@ void RTSI::receive()
 
 		case RTSI_CONTROL_PACKAGE_SETUP_INPUTS:
 		{
-			std::string datatypes(std::begin(data) + 1, std::end(data));
+			char id = data.at(0);
+      DEBUG("ID:" << (int)id);
+      std::string datatypes(std::begin(data) + 1, std::end(data));
 			DEBUG("Datatypes:" << datatypes);
 			std::string in_use_str("IN_USE");
 			if (datatypes.find(in_use_str) != std::string::npos)

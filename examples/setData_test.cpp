@@ -12,12 +12,13 @@ int main(int argc, char const *argv[])
   // rtsi_io.setStandardDigitalOut(9, true);
   // rtsi_io.setSpeedSlider(1);
   // rtsi_io.setInputDoubleRegister(18,0.3);
-  // rtsi_io.setStandardDigitalOut(3, true);
-  // rtsi_io.setConfigurableDigitalOut(7, true);
-  rtsi_io.setStandardDigitalOut(10, true);
-    // std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  // rtsi_io.setStandardDigitalOut(5, true);
+  // rtsi_io.setConfigurableDigitalOut(5, true);
+  // rtsi_io.setAnalogOutputVoltage(0,0.7);
+  rtsi_io.setAKData(11,true,6,true);
+  // std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-  std::cout << "Digital pin set\n";
+  std::cout << "IO set\n";
 
   return 0;
 }

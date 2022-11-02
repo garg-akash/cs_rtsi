@@ -168,6 +168,19 @@ void RTSI::send(const RobotCommand &robot_cmd)
                       std::make_move_iterator(reg_int_packed.end()));
   }
 
+  if (robot_cmd.type_ == RobotCommand::SET_EE_POSITION)
+  {
+    std::vector<char> reg_double_packed1 = RTSIUtility::packDouble(robot_cmd.reg_double_val1_);
+    std::vector<char> reg_double_packed2 = RTSIUtility::packDouble(robot_cmd.reg_double_val2_);
+    std::vector<char> reg_double_packed3 = RTSIUtility::packDouble(robot_cmd.reg_double_val3_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(reg_double_packed1.begin()),
+                      std::make_move_iterator(reg_double_packed1.end()));
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(reg_double_packed2.begin()),
+                      std::make_move_iterator(reg_double_packed2.end()));
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(reg_double_packed3.begin()),
+                      std::make_move_iterator(reg_double_packed3.end()));
+  }
+
   if (robot_cmd.type_ == RobotCommand::SET_INPUT_DOUBLE_REGISTER)
   {
     std::cout << "Comes here...............\n" << robot_cmd.reg_double_val_ << "\n";

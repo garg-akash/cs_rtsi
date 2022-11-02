@@ -273,7 +273,7 @@ class RTSIUtility
     out.c[6] = in.c[1];
     out.c[7] = in.c[0];
     
-    for (auto const &character : out.c)
+    for (auto const &character : in.c)
       output.push_back(character);
     
     // std::cout << "D val : " << out.value << "\n";

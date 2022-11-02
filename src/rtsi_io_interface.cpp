@@ -41,8 +41,9 @@ void RTSIIOInterface::disconnect()
 
 bool RTSIIOInterface::setupInputRecipes()
 {
-  std::vector<std::string> ak_input = {"standard_digital_output_mask", "standard_digital_output",
-                                       "configurable_digital_output_mask", "configurable_digital_output"};
+  // std::vector<std::string> ak_input = {"standard_digital_output_mask", "standard_digital_output",
+  //                                      "configurable_digital_output_mask", "configurable_digital_output"};
+  std::vector<std::string> ak_input = {inDoubleReg(0),inDoubleReg(1),inDoubleReg(2)};
   rtsi_->sendInputSetup(ak_input);
 
   // // Recipe 1
@@ -143,6 +144,17 @@ bool RTSIIOInterface::setAKData(std::uint16_t std_digital_id, bool std_digital_l
   return sendCommand(robot_cmd);
 }
 
+bool RTSIIOInterface::setInputDoubleRegisterPosition(double value1, double value2, double value3)
+{
+  RTSI::RobotCommand robot_cmd;
+  robot_cmd.type_ = RTSI::RobotCommand::Type::SET_EE_POSITION;
+  robot_cmd.recipe_id_ = 1;
+  robot_cmd.reg_double_val1_ = value1;
+  robot_cmd.reg_double_val2_ = value2;
+  robot_cmd.reg_double_val3_ = value3;
+  return sendCommand(robot_cmd);
+}
+
 bool RTSIIOInterface::setSpeedSlider(double speed)
 {
   RTSI::RobotCommand robot_cmd;
@@ -192,7 +204,7 @@ bool RTSIIOInterface::setConfigurableDigitalOut(std::uint8_t output_id, bool sig
     robot_cmd.configurable_digital_out_mask_ = static_cast<uint8_t>(1u << output_id);
     robot_cmd.configurable_digital_out_ = 0;
   }
-  
+
   return sendCommand(robot_cmd);
 }
 

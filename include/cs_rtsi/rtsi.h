@@ -84,7 +84,8 @@ public:
 	    // SET_GRAVITY = 59,
 	    WATCHDOG = 99,
 	    // STOP_SCRIPT = 255
-      SET_AK_DATA = 89
+      SET_AK_DATA = 89,
+      SET_EE_POSITION = 90
 	  };
 
 	  enum Recipe
@@ -137,6 +138,9 @@ public:
 	  std::int32_t speed_slider_mask_;
 	  double speed_slider_fraction_;
 	  // std::uint32_t steps_;
+    double reg_double_val1_;
+    double reg_double_val2_;
+    double reg_double_val3_;
 	};
 
 	enum RTSICommand

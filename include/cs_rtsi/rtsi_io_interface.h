@@ -36,6 +36,8 @@ class RTSIIOInterface
 
    bool setAKData(std::uint16_t output_id1, bool signal_level1, std::uint8_t output_id2, bool signal_level2);
 
+   bool setInputDoubleRegisterPosition(double v1, double v2, double v3);
+   
  private:
  	std::string hostip_;
  	int port_;

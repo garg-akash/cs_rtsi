@@ -1,0 +1,23 @@
+global state_init
+state_init = get_actual_tcp_pose()
+x = read_input_float_register(0) 
+y = read_input_float_register(1)
+z = read_input_float_register(2)
+Rx = state_init[3]
+Ry = state_init[4]
+Rz = state_init[5]
+#print(state_init[0])
+#set a flag bit usinf RTSI and use it in the script for future
+if (x == 0):
+  x = state_init[0]
+if (y == 0):
+  y = state_init[1]
+if (z == 0):
+  z = state_init[2]
+#Rx = read_input_float_register(3)
+#Ry = read_input_float_register(4)
+#Rz = read_input_float_register(5)
+print("x : ",x)
+print("y : ",y)
+print("z : ",z)
+movel([x,y,z,Rx,Ry,Rz],a=1.4,v=1.05,t=0,r=0)

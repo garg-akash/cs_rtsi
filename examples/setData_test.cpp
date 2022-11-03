@@ -16,12 +16,12 @@ int main(int argc, char const *argv[])
   // rtsi_io.setConfigurableDigitalOut(5, true);
   // rtsi_io.setAnalogOutputVoltage(0,0.7);
   // rtsi_io.setAKData(11,true,6,true);
-  for(int i = 0; i  < 10; i++)
+  for(int i = 0; i  < 50; i++)
   {
-    rtsi_io.setInputDoubleRegisterPosition(0.3 + 0.01*i, 0.4 + 0.01*i, 0.5 + 0.01*i);
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    rtsi_io.setInputDoubleRegisterPosition(0.671, -0.460 + 0.001*i, 0.542);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }
-
+  rtsi_io.setInputDoubleRegisterPosition(0, 0, 0);
   std::cout << "IO set\n";
 
   return 0;

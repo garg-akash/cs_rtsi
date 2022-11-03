@@ -9,6 +9,9 @@ const std::string hostip = "192.168.51.139";
 int main(int argc, char const *argv[])
 {
   double frequency = 250;
+  double wave_T = 100;
+  double wave_freq = 1/wave_T;
+  double wave_amp = 0.1;
   std::vector<std::string> variables = {"actual_TCP_pose"};
   bool verbose = true;
   RTSIReceiveInterface rtsi_receive(hostip, frequency, variables, verbose);
@@ -18,9 +21,12 @@ int main(int argc, char const *argv[])
   std::cout << "InitY : " << tcp_pose[1] << "\n";
   std::cout << "InitZ : " << tcp_pose[2] << "\n";
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  for(int i = 0; i < 50; i++)
+  for(int t = 0; t < wave_T; t++)
   {
-    rtsi_io.setInputDoubleRegisterPosition(tcp_pose[0], tcp_pose[1] + 0.001*i, tcp_pose[2]);
+    double final_x = tcp_pose[0];
+    double final_y = tcp_pose[1] + 0.001 * t;
+    double final_z = tcp_pose[2] + wave_amp * sin(2 * M_PI * wave_freq * t);
+    rtsi_io.setInputDoubleRegisterPosition(final_x, final_y, final_z);
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }
   rtsi_io.setInputDoubleRegisterPosition(0, 0, 0);

@@ -9,14 +9,8 @@ int main(int argc, char const *argv[])
   bool verbose = true;
   RTSIIOInterface rtsi_io(hostip, verbose);
 
-  // rtsi_io.setStandardDigitalOut(9, true);
-  // rtsi_io.setSpeedSlider(1);
-  // rtsi_io.setInputDoubleRegister(18,0.3);
-  // rtsi_io.setStandardDigitalOut(5, true);
-  // rtsi_io.setConfigurableDigitalOut(5, true);
-  // rtsi_io.setAnalogOutputVoltage(0,0.7);
-  rtsi_io.setAKData(11,true,6,true);
-  // std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  rtsi_io.setStandardDigitalOut(11, true);
+  rtsi_io.setConfigurableDigitalOut(6, true);
 
   std::cout << "IO set\n";
 

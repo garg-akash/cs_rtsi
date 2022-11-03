@@ -41,9 +41,9 @@ void RTSIIOInterface::disconnect()
 
 bool RTSIIOInterface::setupInputRecipes()
 {
-  std::vector<std::string> ak_input = {"standard_digital_output_mask", "standard_digital_output",
-                                       "configurable_digital_output_mask", "configurable_digital_output"};
-  rtsi_->sendInputSetup(ak_input);
+  // std::vector<std::string> ak_input = {"standard_digital_output_mask", "standard_digital_output",
+  //                                      "configurable_digital_output_mask", "configurable_digital_output"};
+  // rtsi_->sendInputSetup(ak_input);
 
   // // Recipe 1
   // std::vector<std::string> no_cmd_input = {inIntReg(23)};
@@ -53,15 +53,15 @@ bool RTSIIOInterface::setupInputRecipes()
   // std::vector<std::string> set_speed_slider = {inIntReg(23), "speed_slider_mask", "speed_slider_fraction"};
   // rtsi_->sendInputSetup(set_speed_slider);
 
-  // // Recipe 4
-  // std::vector<std::string> set_conf_digital_output = {inIntReg(23), "configurable_digital_output_mask",
-  //                                                        "configurable_digital_output"};
-  // rtsi_->sendInputSetup(set_conf_digital_output);
+  // Recipe 3
+  std::vector<std::string> set_std_digital_output = {"standard_digital_output_mask",
+                                                     "standard_digital_output"};
+  rtsi_->sendInputSetup(set_std_digital_output);
 
-  // // Recipe 3
-  // std::vector<std::string> set_std_digital_output = {inIntReg(23), "standard_digital_output_mask",
-  //                                                       "standard_digital_output"};
-  // rtsi_->sendInputSetup(set_std_digital_output);
+  // Recipe 4
+  std::vector<std::string> set_conf_digital_output = {"configurable_digital_output_mask",
+                                                      "configurable_digital_output"};
+  rtsi_->sendInputSetup(set_conf_digital_output);
 
 
   // // Recipe 5
@@ -155,10 +155,9 @@ bool RTSIIOInterface::setSpeedSlider(double speed)
 
 bool RTSIIOInterface::setStandardDigitalOut(std::uint16_t output_id, bool signal_level)
 {
-  // std::cout << "Original : " << (int)output_id << "\n";
   RTSI::RobotCommand robot_cmd;
   robot_cmd.type_ = RTSI::RobotCommand::Type::SET_STD_DIGITAL_OUT;
-  robot_cmd.recipe_id_ = 2;
+  robot_cmd.recipe_id_ = 1;
 
   if (signal_level)
   {
@@ -170,9 +169,7 @@ bool RTSIIOInterface::setStandardDigitalOut(std::uint16_t output_id, bool signal
     robot_cmd.std_digital_out_mask_ = static_cast<uint16_t>(1u << output_id);
     robot_cmd.std_digital_out_ = 0;
   }
-  // std::cout << "Shifting : " << (int)robot_cmd.std_digital_out_mask_ << "\n";
-  // std::cout << "Inputs to Std Dig Out are : " << unsigned(robot_cmd.std_digital_out_mask_) << " ; " << unsigned(robot_cmd.std_digital_out_) << "\n";
-
+  
   return sendCommand(robot_cmd);
 }
 

@@ -19,3 +19,8 @@ add_executable(setData_test examples/setData_test.cpp)
 target_include_directories(setData_test PUBLIC include)
 target_link_directories(setData_test PRIVATE src)
 target_link_libraries(setData_test libRTSI Boost::thread)
+
+add_executable(getSetData_test examples/getSetData_test.cpp)
+target_include_directories(getSetData_test PUBLIC include)
+target_link_directories(getSetData_test PRIVATE src)
+target_link_libraries(getSetData_test libRTSI Boost::thread)

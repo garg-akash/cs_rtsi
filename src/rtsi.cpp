@@ -39,7 +39,9 @@ RTSI::RTSI(const std::string hostip, int port, bool verbose)
 	  conn_state_(ConnectionState::DISCONNECTED),
 	  deadline_(io_service_)
 {
-	
+  //no deadline untill specifc deadline is set
+	deadline_.expires_at(boost::posix_time::pos_infin); 
+  check_deadline();
 }
 
 RTSI::~RTSI() = default;
@@ -348,17 +350,13 @@ std::size_t RTSI::async_read_some(AsyncReadStream &s, const MutableBufferSequenc
 
   deadline_.expires_from_now(boost::posix_time::milliseconds(timeout_ms));
 
-  // Set up the variable that receives the result of the asynchronous
-  // operation. The error code is set to would_block to signal that the
-  // operation is incomplete. Asio guarantees that its asynchronous
-  // operations will never fail with would_block, so any other value in
-  // ec indicates completion.
+  // error code set to would_block indicates operation is incomplete
+  // Asio asynchronous operations will never fail with would_block, 
+  // so any other value in ec indicates completion.
   ec = boost::asio::error::would_block;
   size_t bytes_received = 0;
 
-  // Start the asynchronous operation itself. The boost::lambda function
-  // object is used as a callback and will update the ec variable when the
-  // operation completes.
+  // Start the asynchronous operation, callback will update the ec variable on operation completion
   s.async_read_some(buffers,
                     [&](const boost::system::error_code &error, std::size_t bytes_transferred)
                     {
@@ -644,4 +642,9 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
     }
   }
   return error;
+}
+
+void RTSI::check_deadline()
+{
+  deadline_.async_wait(boost::bind(&RTSI::check_deadline, this));
 }

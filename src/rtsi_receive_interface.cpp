@@ -113,8 +113,8 @@ void RTSIReceiveInterface::receiveCallback()
 
 // #if defined(__linux__) || defined(__APPLE__)
 //         // Data not available on socket yet, yield to other threads and sleep before trying to receive data again.
-//         std::this_thread::yield();
-//         std::this_thread::sleep_for(std::chrono::microseconds(100));
+        std::this_thread::yield();
+        std::this_thread::sleep_for(std::chrono::microseconds(100));
 // #endif
   		}
 		}

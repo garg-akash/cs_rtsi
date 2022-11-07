@@ -27,9 +27,9 @@ RTSIIOInterface::RTSIIOInterface(std::string hostip, bool verbose, bool use_uppe
 
 RTSIIOInterface::~RTSIIOInterface()
 {
-  // if(rtsi_ != nullptr)
-  //   if(rtsi_->isConnected())
-  //     rtsi_->disconnect();
+  if(rtsi_ != nullptr)
+    if(rtsi_->isConnected())
+      rtsi_->disconnect();
 }
 
 void RTSIIOInterface::disconnect()

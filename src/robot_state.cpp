@@ -3,16 +3,16 @@
 
 std::unordered_map<std::string, rtsi_type_variant_> RobotState::state_types_ {
 	{ "payload_cog", std::vector<double>() },
-    { "payload_mass", double() },
-    { "script_control_line", uint32_t() },
+  { "payload_mass", double() },
+  { "script_control_line", uint32_t() },
 	{ "timestamp", double() },
-    { "target_joint_positions", std::vector<double>() },
-    { "target_joint_speeds", std::vector<double>() },
-    { "target_joint_torques", std::vector<double>() },
-    { "actual_joint_positions", std::vector<double>() },
-    { "actual_joint_speeds", std::vector<double>() },
-    { "actual_joint_current", std::vector<double>() },
-    { "actual_joint_positions", std::vector<double>() },
+  { "target_joint_positions", std::vector<double>() },
+  { "target_joint_speeds", std::vector<double>() },
+  { "target_joint_torques", std::vector<double>() },
+  { "actual_joint_positions", std::vector<double>() },
+  { "actual_joint_speeds", std::vector<double>() },
+  { "actual_joint_current", std::vector<double>() },
+  { "actual_joint_positions", std::vector<double>() },
 	{ "actual_TCP_pose", std::vector<double>() },
 	{ "actual_TCP_speed", std::vector<double>() },
 	{ "target_TCP_pose", std::vector<double>() },
@@ -37,7 +37,7 @@ std::unordered_map<std::string, rtsi_type_variant_> RobotState::state_types_ {
 
 RobotState::RobotState(const std::vector<std::string> &variables)
 {
-  	initRobotState(variables);
+  initRobotState(variables);
 }
 
 RobotState::~RobotState() = default;
@@ -56,24 +56,24 @@ bool RobotState::unlockUpdateStateMutex()
 
 void RobotState::setFirstStateReceived(bool val)
 {
-  	first_state_received_ = val;
+  first_state_received_ = val;
 }
 
 bool RobotState::getFirstStateReceived()
 {
-  	return first_state_received_;
+  return first_state_received_;
 }
 
 void RobotState::initRobotState(const std::vector<std::string> &variables)
 {
 	std::lock_guard<std::mutex> lock(update_state_mutex_);
 	for (auto& item : variables)
+	{
+  	if (state_types_.find(item) != state_types_.end())
   	{
-    	if (state_types_.find(item) != state_types_.end())
-    	{
-      		rtsi_type_variant_ entry = state_types_[item];
-      		state_data_[item] = entry;
-    	}
+  		rtsi_type_variant_ entry = state_types_[item];
+  		state_data_[item] = entry;
   	}
-  	first_state_received_ = false;
+	}
+	first_state_received_ = false;
 }

@@ -177,10 +177,17 @@ class RTSIUtility
     return bytes;
   }
 
+  static inline std::vector<char> packBool(bool val)
+  {
+    std::vector<char> result;
+    result.push_back(val);
+    return result;
+  }
+
   static inline std::vector<char> packUInt16(uint16_t uint16)
   {
     std::vector<char> result;
-    result.push_back(uint16); //Tested OK
+    result.push_back(uint16); // Tested OK
     result.push_back(uint16 >> 8);
     return result;
   }
@@ -198,14 +205,14 @@ class RTSIUtility
   static inline std::vector<char> packInt32(int32_t int32)
   {
     std::vector<char> result;
-    // result.push_back(int32);
-    // result.push_back(int32 >> 8);
-    // result.push_back(int32 >> 16);
-    // result.push_back(int32 >> 24);
-    result.push_back(int32 >> 24);
-    result.push_back(int32 >> 16);
+    result.push_back(int32);  // Tested OK
     result.push_back(int32 >> 8);
-    result.push_back(int32);
+    result.push_back(int32 >> 16);
+    result.push_back(int32 >> 24);
+    // result.push_back(int32 >> 24);
+    // result.push_back(int32 >> 16);
+    // result.push_back(int32 >> 8);
+    // result.push_back(int32);
     return result;
   }
 
@@ -273,7 +280,7 @@ class RTSIUtility
     out.c[6] = in.c[1];
     out.c[7] = in.c[0];
     
-    for (auto const &character : in.c)
+    for (auto const &character : in.c)  // Tested OK
       output.push_back(character);
     
     // std::cout << "D val : " << out.value << "\n";

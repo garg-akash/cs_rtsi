@@ -18,6 +18,8 @@ class RTSIIOInterface
    
    std::string inDoubleReg(int reg);
 
+   std::string inBitReg(int reg);
+
    bool sendCommand(const RTSI::RobotCommand &cmd);
 
    bool setSpeedSlider(double fraction);
@@ -28,11 +30,13 @@ class RTSIIOInterface
 
    bool setAnalogOutputVoltage(std::uint8_t output_id, double signal_ratio);
 
-   // bool setInputBitRegister(int input_id, std::int32_t value); //TODO
+   bool setAnalogOutputCurrent(std::uint8_t output_id, double signal_ratio);
    
    bool setInputIntRegister(int input_id, std::int32_t value);
 
    bool setInputDoubleRegister(int input_id, double value);
+
+   bool setInputBitRegister(int input_id, bool value);
 
    bool setAKData(std::uint16_t output_id1, bool signal_level1, std::uint8_t output_id2, bool signal_level2);
 

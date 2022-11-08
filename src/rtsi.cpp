@@ -185,10 +185,16 @@ void RTSI::send(const RobotCommand &robot_cmd)
 
   if (robot_cmd.type_ == RobotCommand::SET_INPUT_DOUBLE_REGISTER)
   {
-    std::cout << "Comes here...............\n" << robot_cmd.reg_double_val_ << "\n";
     std::vector<char> reg_double_packed = RTSIUtility::packDouble(robot_cmd.reg_double_val_);
     cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(reg_double_packed.begin()),
                       std::make_move_iterator(reg_double_packed.end()));
+  }
+
+  if (robot_cmd.type_ == RobotCommand::SET_INPUT_BIT_REGISTER)
+  {
+    std::vector<char> reg_bit_packed = RTSIUtility::packBool(robot_cmd.reg_bit_val_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(reg_bit_packed.begin()),
+                      std::make_move_iterator(reg_bit_packed.end()));
   }
 
   if (robot_cmd.type_ == RobotCommand::WATCHDOG)
@@ -267,7 +273,6 @@ void RTSI::send(const RobotCommand &robot_cmd)
 
   if (robot_cmd.type_ == RobotCommand::SET_SPEED_SLIDER)
   {
-    std::cout << "Comes here...............\n" << robot_cmd.speed_slider_mask_ << " ; " << robot_cmd.speed_slider_fraction_ << "\n";
     std::vector<char> speed_slider_mask_packed = RTSIUtility::packInt32(robot_cmd.speed_slider_mask_);
     cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(speed_slider_mask_packed.begin()),
                       std::make_move_iterator(speed_slider_mask_packed.end()));

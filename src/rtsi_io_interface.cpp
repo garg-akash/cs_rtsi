@@ -54,9 +54,9 @@ bool RTSIIOInterface::setupInputRecipes()
   // rtsi_->sendInputSetup(set_speed_slider);
 
   // Recipe 3
-  // std::vector<std::string> set_std_digital_output = {"standard_digital_output_mask",
-  //                                                    "standard_digital_output"};
-  // rtsi_->sendInputSetup(set_std_digital_output);
+  std::vector<std::string> set_std_digital_output = {"standard_digital_output_mask",
+                                                     "standard_digital_output"};
+  rtsi_->sendInputSetup(set_std_digital_output);
 
   // Recipe 4
   std::vector<std::string> set_conf_digital_output = {"configurable_digital_output_mask",

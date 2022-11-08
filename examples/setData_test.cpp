@@ -9,7 +9,7 @@ int main(int argc, char const *argv[])
   bool verbose = true;
   RTSIIOInterface rtsi_io(hostip, verbose);
 
-  // rtsi_io.setStandardDigitalOut(11, true);
+  rtsi_io.setStandardDigitalOut(11, true);
   rtsi_io.setConfigurableDigitalOut(6, true);
 
   std::cout << "IO set\n";

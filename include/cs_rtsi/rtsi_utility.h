@@ -75,6 +75,7 @@ class RTSIUtility
   	message_offset += 1;
   	return output;
   }
+
 	static inline uint16_t getUInt16(const std::vector<char> &data, uint32_t &message_offset)
 	{
 		uint16_t output = 0;
@@ -84,6 +85,16 @@ class RTSIUtility
 
 		return output;
 	}
+
+  static inline uint16_t getUInt16(const std::vector<unsigned char> &data, uint32_t &message_offset)
+  {
+    uint16_t output = 0;
+    ((char *)(&output))[1] = data[message_offset + 0];
+    ((char *)(&output))[0] = data[message_offset + 1];
+    message_offset += 2;
+
+    return output;
+  }
 
 	static inline uint32_t getUInt32(const std::vector<char> &data, uint32_t &message_offset)
   {

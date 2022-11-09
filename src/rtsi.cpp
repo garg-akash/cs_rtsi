@@ -15,6 +15,8 @@
 #include <string>
 #include <thread>
 
+typedef std::basic_string<unsigned char> ustring;
+
 const unsigned HEADER_SIZE = 3;
 #define RTSI_PROTOCOL_VERSION 1
 #define DEBUG_OUTPUT true
@@ -324,12 +326,13 @@ void RTSI::sendAll(const std::uint8_t &command, std::string payload)
   // for(auto a : buffer)
   // 	std::cout << unsigned(a) << "\n";
   // Create vector<char> that includes the header
-  std::vector<char> header_packed;
+  std::vector<unsigned char> header_packed;
   std::copy(buffer, buffer + sizeof(buffer), std::back_inserter(header_packed));
   std::cout << "header_packed (size and type): \n";
   for(auto a : header_packed)
   	std::cout << a << "\n";
   // Add the payload to the header_packed vector
+  ustring payloadU = reinterpret_cast<const unsigned char*>(payload.c_str());
   std::copy(payload.begin(), payload.end(), std::back_inserter(header_packed));
   std::cout << "header_packed (size, type and payload): \n";
   for(auto a : header_packed)
@@ -408,7 +411,7 @@ void RTSI::sendPause()
 void RTSI::receive()
 {
 	DEBUG("Receiving...");
-	std::vector<char> data(HEADER_SIZE);
+	std::vector<unsigned char> data(HEADER_SIZE);
 	boost::asio::read(*socket_, boost::asio::buffer(data));
 	uint32_t message_offset = 0;
 	uint16_t msg_size = RTSIUtility::getUInt16(data, message_offset);
@@ -448,8 +451,8 @@ void RTSI::receive()
 
 		case RTSI_CONTROL_PACKAGE_SETUP_INPUTS:
 		{
-			char id = data.at(0);
-      DEBUG("ID:" << (int)id);
+			unsigned char id = data.at(0);
+      DEBUG("ID:" << (unsigned)id);
       std::string datatypes(std::begin(data) + 1, std::end(data));
 			DEBUG("Datatypes:" << datatypes);
 			std::string in_use_str("IN_USE");

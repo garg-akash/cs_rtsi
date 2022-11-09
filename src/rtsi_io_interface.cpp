@@ -79,8 +79,16 @@ bool RTSIIOInterface::setupInputRecipes()
     rtsi_->sendInputSetup(set_input_double_reg_input);
   }
 
-  // Recipe 101-228
-  for(int i = 0; i <= 127; i++)
+  // Recipe 101
+  std::vector<std::string> set_input_bit_reg_inputO_to_31 = {"input_bit_registers0_to_31"};
+  rtsi_->sendInputSetup(set_input_bit_reg_inputO_to_31);
+
+  // Recipe 102
+  std::vector<std::string> set_input_bit_reg_input32_to_63 = {"input_bit_registers32_to_63"};
+  rtsi_->sendInputSetup(set_input_bit_reg_input32_to_63);
+
+  // Recipe 103-166
+  for(int i = 64; i <= 127; i++)
   {
     std::vector<std::string> set_input_bit_reg_input = {inBitReg(i)};
     rtsi_->sendInputSetup(set_input_bit_reg_input);
@@ -243,16 +251,34 @@ bool RTSIIOInterface::setInputDoubleRegister(int input_id, double value)
   return sendCommand(robot_cmd);
 }
 
+bool RTSIIOInterface::setInputBitRegister0to31(std::uint32_t value)
+{
+  RTSI::RobotCommand robot_cmd;
+  robot_cmd.type_ = RTSI::RobotCommand::Type::SET_INPUT_BIT_REGISTER_X_TO_Y;
+  robot_cmd.recipe_id_ = 101;
+  robot_cmd.reg_bit_val_x_to_y_ = value;
+  return sendCommand(robot_cmd);
+}
+
+bool RTSIIOInterface::setInputBitRegister32to63(std::uint32_t value)
+{
+  RTSI::RobotCommand robot_cmd;
+  robot_cmd.type_ = RTSI::RobotCommand::Type::SET_INPUT_BIT_REGISTER_X_TO_Y;
+  robot_cmd.recipe_id_ = 102;
+  robot_cmd.reg_bit_val_x_to_y_ = value;
+  return sendCommand(robot_cmd);
+}
+
 bool RTSIIOInterface::setInputBitRegister(int input_id, bool value)
 {
   RTSI::RobotCommand robot_cmd;
   robot_cmd.type_ = RTSI::RobotCommand::Type::SET_INPUT_BIT_REGISTER;
   
-  if (input_id >= 0 && input_id <= 127)
-    robot_cmd.recipe_id_ = 101 + input_id;
+  if (input_id >= 64 && input_id <= 127)
+    robot_cmd.recipe_id_ = 103 + input_id - 64;
   else
     throw std::range_error(
-        "The supported range of setInputBitRegister() is [0-127], you specified: " +
+        "The supported range of setInputBitRegister() is [64-127], you specified: " +
         std::to_string(input_id));
 
   robot_cmd.reg_bit_val_ = value;
@@ -271,7 +297,7 @@ std::string RTSIIOInterface::inDoubleReg(int reg)
 
 std::string RTSIIOInterface::inBitReg(int reg)
 {
-  return "input_bit_register" + std::to_string(register_offset_ + reg);
+  return "input_bit_register" + std::to_string(reg);
 }
 
 bool RTSIIOInterface::sendCommand(const RTSI::RobotCommand &cmd)

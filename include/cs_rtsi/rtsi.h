@@ -73,7 +73,8 @@ public:
 	    SET_CONF_DIGITAL_OUT = 48,
 	    SET_INPUT_INT_REGISTER = 49,
 	    SET_INPUT_DOUBLE_REGISTER = 50,
-      SET_INPUT_BIT_REGISTER = 88,
+      SET_INPUT_BIT_REGISTER_X_TO_Y = 81,
+      SET_INPUT_BIT_REGISTER = 82,
 	    // MOVE_UNTIL_CONTACT = 51,
 	    // FREEDRIVE_MODE = 52,
 	    // END_FREEDRIVE_MODE = 53,
@@ -122,6 +123,7 @@ public:
 	  // std::int32_t ft_rtsi_input_enable_;
 	  std::int32_t reg_int_val_;
 	  double reg_double_val_;
+    std::uint32_t reg_bit_val_x_to_y_;
     bool reg_bit_val_;
 	  std::vector<double> val_;
 	  // std::vector<int> selection_vector_;

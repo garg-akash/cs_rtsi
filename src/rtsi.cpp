@@ -190,6 +190,13 @@ void RTSI::send(const RobotCommand &robot_cmd)
                       std::make_move_iterator(reg_double_packed.end()));
   }
 
+  if (robot_cmd.type_ == RobotCommand::SET_INPUT_BIT_REGISTER_X_TO_Y)
+  {
+    std::vector<char> reg_bit_packed = RTSIUtility::packUInt32(robot_cmd.reg_bit_val_x_to_y_);
+    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(reg_bit_packed.begin()),
+                      std::make_move_iterator(reg_bit_packed.end()));
+  }
+
   if (robot_cmd.type_ == RobotCommand::SET_INPUT_BIT_REGISTER)
   {
     std::vector<char> reg_bit_packed = RTSIUtility::packBool(robot_cmd.reg_bit_val_);
@@ -294,10 +301,11 @@ void RTSI::send(const RobotCommand &robot_cmd)
                       std::make_move_iterator(std_analog_output_1_packed.end()));
   }
 
-  cmd_packed.insert(cmd_packed.begin(), robot_cmd.recipe_id_);
+  cmd_packed.insert(cmd_packed.begin(), static_cast<char>(robot_cmd.recipe_id_));
   std::string sent(cmd_packed.begin(), cmd_packed.end());
 
   sendAll(command, sent);
+  std::cout << "ID set*********** " << +robot_cmd.recipe_id_ << "\n";
   DEBUG("Done sending RTSI_DATA_PACKAGE");
 }
 
@@ -325,7 +333,7 @@ void RTSI::sendAll(const std::uint8_t &command, std::string payload)
   std::copy(payload.begin(), payload.end(), std::back_inserter(header_packed));
   std::cout << "header_packed (size, type and payload): \n";
   for(auto a : header_packed)
-  	std::cout << unsigned(a) << "\n";
+  	std::cout << +a << "\n";
   std::string sent(header_packed.begin(), header_packed.end());
   // std::cout << "sent: " << sent << "\n";
   DEBUG("SENDING buf containing: " << sent << " with len: " << sent.size());

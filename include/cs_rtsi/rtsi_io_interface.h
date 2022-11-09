@@ -36,6 +36,10 @@ class RTSIIOInterface
 
    bool setInputDoubleRegister(int input_id, double value);
 
+   bool setInputBitRegister0to31(std::uint32_t value);
+
+   bool setInputBitRegister32to63(std::uint32_t value);
+
    bool setInputBitRegister(int input_id, bool value);
 
    bool setAKData(std::uint16_t output_id1, bool signal_level1, std::uint8_t output_id2, bool signal_level2);

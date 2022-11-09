@@ -195,10 +195,14 @@ class RTSIUtility
   static inline std::vector<char> packUInt32(uint32_t uint32)
   {
     std::vector<char> result;
-    result.push_back(uint32 >> 24);
-    result.push_back(uint32 >> 16);
+    result.push_back(uint32); // Tested OK
     result.push_back(uint32 >> 8);
-    result.push_back(uint32);
+    result.push_back(uint32 >> 16);
+    result.push_back(uint32 >> 24);
+    // result.push_back(uint32 >> 24);
+    // result.push_back(uint32 >> 16);
+    // result.push_back(uint32 >> 8);
+    // result.push_back(uint32);
     return result;
   }
 

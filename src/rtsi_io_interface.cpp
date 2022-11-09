@@ -1,3 +1,8 @@
+/*
+Author: Elite_akashgarg
+CreateDate: 2022-11-09
+Description: handles rtsi input subscription
+*/
 #include <cs_rtsi/rtsi.h>
 #include <cs_rtsi/rtsi_io_interface.h>
 #include <cs_rtsi/rtsi_utility.h>
@@ -41,11 +46,6 @@ void RTSIIOInterface::disconnect()
 
 bool RTSIIOInterface::setupInputRecipes()
 {
-  // std::vector<std::string> ak_input = {"standard_digital_output_mask", "standard_digital_output",
-  //                                      "configurable_digital_output_mask", "configurable_digital_output"};
-  // std::vector<std::string> ak_input = {inDoubleReg(0),inDoubleReg(1),inDoubleReg(2)};
-  // rtsi_->sendInputSetup(ak_input);
-
   // Recipe 1
   std::vector<std::string> set_speed_slider = {"speed_slider_mask", "speed_slider_fraction"};
   rtsi_->sendInputSetup(set_speed_slider);
@@ -97,47 +97,6 @@ bool RTSIIOInterface::setupInputRecipes()
   return true;
 }
 
-// bool RTSIIOInterface::setAKData(std::uint16_t std_digital_id, bool std_digital_level,
-//                                   std::uint8_t conf_digital_id, bool conf_digital_level)
-// {
-//   RTSI::RobotCommand robot_cmd;
-//   robot_cmd.type_ = RTSI::RobotCommand::Type::SET_AK_DATA;
-//   robot_cmd.recipe_id_ = 1;
-//   if (std_digital_level)
-//   {
-//     robot_cmd.std_digital_out_mask_ = static_cast<uint16_t>(1u << std_digital_id);
-//     robot_cmd.std_digital_out_ = static_cast<uint16_t>(1u << std_digital_id);
-//   }
-//   else
-//   {
-//     robot_cmd.std_digital_out_mask_ = static_cast<uint16_t>(1u << std_digital_id);
-//     robot_cmd.std_digital_out_ = 0;
-//   }
-//   if (conf_digital_level)
-//   {
-//     robot_cmd.configurable_digital_out_mask_ = static_cast<uint8_t>(1u << conf_digital_id);
-//     robot_cmd.configurable_digital_out_ = static_cast<uint8_t>(1u << conf_digital_id);
-//   }
-//   else
-//   {
-//     robot_cmd.configurable_digital_out_mask_ = static_cast<uint8_t>(1u << conf_digital_id);
-//     robot_cmd.configurable_digital_out_ = 0;
-//   }
-
-//   return sendCommand(robot_cmd);
-// }
-
-bool RTSIIOInterface::setInputDoubleRegisterPosition(double value1, double value2, double value3)
-{
-  RTSI::RobotCommand robot_cmd;
-  robot_cmd.type_ = RTSI::RobotCommand::Type::SET_EE_POSITION;
-  robot_cmd.recipe_id_ = 1;
-  robot_cmd.reg_double_val1_ = value1;
-  robot_cmd.reg_double_val2_ = value2;
-  robot_cmd.reg_double_val3_ = value3;
-  return sendCommand(robot_cmd);
-}
-
 bool RTSIIOInterface::setSpeedSlider(double speed)
 {
   RTSI::RobotCommand robot_cmd;
@@ -165,9 +124,6 @@ bool RTSIIOInterface::setStandardDigitalOut(std::uint16_t output_id, bool signal
     robot_cmd.std_digital_out_mask_ = static_cast<uint16_t>(1u << output_id);
     robot_cmd.std_digital_out_ = 0;
   }
-  // std::cout << "Shifting : " << (int)robot_cmd.std_digital_out_mask_ << "\n";
-  // std::cout << "Inputs to Std Dig Out are : " << unsigned(robot_cmd.std_digital_out_mask_) << " ; " << unsigned(robot_cmd.std_digital_out_) << "\n";
-
   return sendCommand(robot_cmd);
 }
 
@@ -187,7 +143,6 @@ bool RTSIIOInterface::setConfigurableDigitalOut(std::uint8_t output_id, bool sig
     robot_cmd.configurable_digital_out_mask_ = static_cast<uint8_t>(1u << output_id);
     robot_cmd.configurable_digital_out_ = 0;
   }
-
   return sendCommand(robot_cmd);
 }
 

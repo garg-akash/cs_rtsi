@@ -1,3 +1,8 @@
+/*
+Author: Elite_akashgarg
+CreateDate: 2022-11-09
+Description: handles rtsi basic communication
+*/
 #include <cs_rtsi/robot_state.h>
 #include <cs_rtsi/rtsi.h>
 #include <cs_rtsi/rtsi_utility.h>
@@ -172,19 +177,6 @@ void RTSI::send(const RobotCommand &robot_cmd)
                       std::make_move_iterator(reg_int_packed.end()));
   }
 
-  if (robot_cmd.type_ == RobotCommand::SET_EE_POSITION)
-  {
-    std::vector<char> reg_double_packed1 = RTSIUtility::packDouble(robot_cmd.reg_double_val1_);
-    std::vector<char> reg_double_packed2 = RTSIUtility::packDouble(robot_cmd.reg_double_val2_);
-    std::vector<char> reg_double_packed3 = RTSIUtility::packDouble(robot_cmd.reg_double_val3_);
-    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(reg_double_packed1.begin()),
-                      std::make_move_iterator(reg_double_packed1.end()));
-    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(reg_double_packed2.begin()),
-                      std::make_move_iterator(reg_double_packed2.end()));
-    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(reg_double_packed3.begin()),
-                      std::make_move_iterator(reg_double_packed3.end()));
-  }
-
   if (robot_cmd.type_ == RobotCommand::SET_INPUT_DOUBLE_REGISTER)
   {
     std::vector<char> reg_double_packed = RTSIUtility::packDouble(robot_cmd.reg_double_val_);
@@ -245,19 +237,6 @@ void RTSI::send(const RobotCommand &robot_cmd)
   //                     std::make_move_iterator(async_packed.end()));
   // }
 
-  if (robot_cmd.type_ == RobotCommand::SET_AK_DATA)
-  {
-    std::vector<char> std_digital_out_mask_packed = RTSIUtility::packUInt16(robot_cmd.std_digital_out_mask_);
-    std::vector<char> std_digital_out_packed = RTSIUtility::packUInt16(robot_cmd.std_digital_out_);
-    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_digital_out_mask_packed.begin()),
-                      std::make_move_iterator(std_digital_out_mask_packed.end()));
-    cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(std_digital_out_packed.begin()),
-                      std::make_move_iterator(std_digital_out_packed.end()));
-
-    cmd_packed.push_back(robot_cmd.configurable_digital_out_mask_);
-    cmd_packed.push_back(robot_cmd.configurable_digital_out_);
-  }
-
   if (robot_cmd.type_ == RobotCommand::SET_STD_DIGITAL_OUT)
   {
     std::vector<char> std_digital_out_mask_packed = RTSIUtility::packUInt16(robot_cmd.std_digital_out_mask_);
@@ -307,7 +286,7 @@ void RTSI::send(const RobotCommand &robot_cmd)
   std::string sent(cmd_packed.begin(), cmd_packed.end());
 
   sendAll(command, sent);
-  std::cout << "ID set*********** " << +robot_cmd.recipe_id_ << "\n";
+  // std::cout << "ID set*********** " << +robot_cmd.recipe_id_ << "\n";
   DEBUG("Done sending RTSI_DATA_PACKAGE");
 }
 
@@ -552,7 +531,6 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
 
   // Add data to the buffer
   buffer_.insert(buffer_.end(), data.begin(), data.begin() + data_len);
-  // std::cout << "In this !!!!!!!!!!!" << data_len << " ; " << buffer_.size() << "; "  << HEADER_SIZE << "\n";
 
   while (buffer_.size() >= HEADER_SIZE)
   {
@@ -616,6 +594,7 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
             }
             else if (entry.type() == typeid(int32_t))
             {
+              std::cout << "Parsing Int32\n";
               int32_t parsed_data = RTSIUtility::getInt32(packet, packet_data_offset);
               robot_state->setStateData(output_name, parsed_data);
             }

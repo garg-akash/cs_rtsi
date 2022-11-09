@@ -1,3 +1,8 @@
+/*
+Author: Elite_akashgarg
+CreateDate: 2022-11-09
+Description: example script to test input subscription
+*/
 #include <cs_rtsi/rtsi_io_interface.h>
 #include <iostream>
 #include <thread>
@@ -20,7 +25,6 @@ int main(int argc, char const *argv[])
   rtsi_io.setInputBitRegister0to31(1);
   rtsi_io.setInputBitRegister32to63(3);
   rtsi_io.setInputBitRegister(88,true);
-  // rtsi_io.setAKData(11,true,6,true);
   // for(int i = 0; i  < 50; i++)
   // {
   //   rtsi_io.setInputDoubleRegisterPosition(0.671, -0.460 + 0.001*i, 0.542);

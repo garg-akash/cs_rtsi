@@ -1,3 +1,8 @@
+/*
+Author: Elite_akashgarg
+CreateDate: 2022-11-09
+Description: handles robot state parameters
+*/
 #include <cs_rtsi/robot_state.h>
 #include <unordered_map>
 
@@ -17,22 +22,22 @@ std::unordered_map<std::string, rtsi_type_variant_> RobotState::state_types_ {
 	{ "actual_TCP_speed", std::vector<double>() },
 	{ "target_TCP_pose", std::vector<double>() },
 	{ "target_TCP_speed", std::vector<double>() },
-	{ "actual_digital_input_bits", uint32_t() },
+	{ "actual_digital_input_bits", std::uint32_t() },
 	{ "joint_temperatures", std::vector<double>() },
-	{ "robot_mode", int32_t() },
+	{ "robot_mode", std::int32_t() },
 	{ "joint_mode", std::vector<int32_t>() },
-	{ "safety_mode", int32_t() },
-	{ "safety_status", int32_t() },
+	{ "safety_mode", std::int32_t() },
+	{ "safety_status", std::int32_t() },
 	{ "speed_scaling", double() },
 	{ "target_speed_fraction", double() },
 	{ "actual_robot_voltage", double() },
 	{ "actual_robot_current", double() },
-	{ "actual_digital_output_bits", uint32_t() },
-	{ "runtime_state", uint32_t() },
+	{ "actual_digital_output_bits", std::uint32_t() },
+	{ "runtime_state", std::uint32_t() },
 	{ "elbow_position", std::vector<double>() },
-	{ "robot_status_bits", uint32_t() },
-	{ "safety_status_bits", uint32_t() },
-	{ "analog_io_types", uint32_t() }
+	{ "robot_status_bits", std::uint32_t() },
+	{ "safety_status_bits", std::uint32_t() },
+	{ "analog_io_types", std::uint32_t() }
 };
 
 RobotState::RobotState(const std::vector<std::string> &variables)

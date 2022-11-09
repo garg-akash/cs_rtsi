@@ -210,10 +210,6 @@ class RTSIUtility
     result.push_back(uint32 >> 8);
     result.push_back(uint32 >> 16);
     result.push_back(uint32 >> 24);
-    // result.push_back(uint32 >> 24);
-    // result.push_back(uint32 >> 16);
-    // result.push_back(uint32 >> 8);
-    // result.push_back(uint32);
     return result;
   }
 
@@ -224,10 +220,6 @@ class RTSIUtility
     result.push_back(int32 >> 8);
     result.push_back(int32 >> 16);
     result.push_back(int32 >> 24);
-    // result.push_back(int32 >> 24);
-    // result.push_back(int32 >> 16);
-    // result.push_back(int32 >> 8);
-    // result.push_back(int32);
     return result;
   }
 
@@ -281,24 +273,12 @@ class RTSIUtility
     {
       double value;
       char c[8];
-    } in{}, out{};
+    } in{};
     in.value = d;
-    // std::cout << "D val : " << in.value << "\n";
-    // for(auto i : in.c)
-    // 	std::cout << "c val : " << unsigned(i) << "\n";
-    out.c[0] = in.c[7];
-    out.c[1] = in.c[6];
-    out.c[2] = in.c[5];
-    out.c[3] = in.c[4];
-    out.c[4] = in.c[3];
-    out.c[5] = in.c[2];
-    out.c[6] = in.c[1];
-    out.c[7] = in.c[0];
     
     for (auto const &character : in.c)  // Tested OK
       output.push_back(character);
     
-    // std::cout << "D val : " << out.value << "\n";
     return output;
   }
 };

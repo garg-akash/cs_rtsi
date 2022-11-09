@@ -1,3 +1,8 @@
+/*
+Author: Elite_akashgarg
+CreateDate: 2022-11-09
+Description: example script to test protocol negotiation
+*/
 #include <cs_rtsi/rtsi.h>
 #include <cs_rtsi/robot_state.h>
 

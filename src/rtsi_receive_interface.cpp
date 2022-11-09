@@ -1,3 +1,8 @@
+/*
+Author: Elite_akashgarg
+CreateDate: 2022-11-09
+Description: handles rtsi output subscription
+*/
 #include <cs_rtsi/robot_state.h>
 #include <cs_rtsi/rtsi.h>
 #include <cs_rtsi/rtsi_receive_interface.h>
@@ -253,4 +258,148 @@ std::vector<double> RTSIReceiveInterface::getTargetTCPSpeed()
 	    return target_tcp_speed;
 	else
 	    throw std::runtime_error("unable to get state data for target_TCP_speed");
+}
+
+std::uint32_t RTSIReceiveInterface::getActualDigitalInputBits()
+{
+  std::uint32_t actual_digital_input_bits;
+  if (robot_state_->getStateData("actual_digital_input_bits", actual_digital_input_bits))
+    return actual_digital_input_bits;
+  else
+    throw std::runtime_error("unable to get state data for actual_digital_input_bits");
+}
+
+std::vector<double> RTSIReceiveInterface::getJointTemperatures()
+{
+	std::vector<double> joint_temperatures;
+	if (robot_state_->getStateData("joint_temperatures", joint_temperatures))
+	    return joint_temperatures;
+	else
+	    throw std::runtime_error("unable to get state data for joint_temperatures");
+}
+
+std::int32_t RTSIReceiveInterface::getRobotMode()
+{
+  std::int32_t robot_mode;
+  if (robot_state_->getStateData("robot_mode", robot_mode))
+    return robot_mode;
+  else
+    throw std::runtime_error("unable to get state data for robot_mode");
+}
+
+std::vector<std::int32_t> RTSIReceiveInterface::getJointMode()
+{
+	std::vector<std::int32_t> joint_mode;
+	if (robot_state_->getStateData("joint_mode", joint_mode))
+	    return joint_mode;
+	else
+	    throw std::runtime_error("unable to get state data for joint_mode");
+}
+
+std::int32_t RTSIReceiveInterface::getSafetyMode()
+{
+  std::int32_t safety_mode;
+  if (robot_state_->getStateData("safety_mode", safety_mode))
+    return safety_mode;
+  else
+    throw std::runtime_error("unable to get state data for safety_mode");
+}
+
+std::int32_t RTSIReceiveInterface::getSafetyStatus()
+{
+  std::int32_t safety_status;
+  if (robot_state_->getStateData("safety_status", safety_status))
+    return safety_status;
+  else
+    throw std::runtime_error("unable to get state data for safety_status");
+}
+
+double RTSIReceiveInterface::getSpeedScaling()
+{
+	double speed_scaling;
+	if(robot_state_->getStateData("speed_scaling", speed_scaling))
+		return speed_scaling;
+	else
+		throw std::runtime_error("unable to get state data for speed_scaling");
+}
+
+double RTSIReceiveInterface::getTargeSpeedFraction()
+{
+	double target_speed_fraction;
+	if(robot_state_->getStateData("target_speed_fraction", target_speed_fraction))
+		return target_speed_fraction;
+	else
+		throw std::runtime_error("unable to get state data for target_speed_fraction");
+}
+
+double RTSIReceiveInterface::getActualRobotVoltage()
+{
+	double actual_robot_voltage;
+	if(robot_state_->getStateData("actual_robot_voltage", actual_robot_voltage))
+		return actual_robot_voltage;
+	else
+		throw std::runtime_error("unable to get state data for actual_robot_voltage");
+}
+
+double RTSIReceiveInterface::getActualRobotCurrent()
+{
+	double actual_robot_current;
+	if(robot_state_->getStateData("actual_robot_current", actual_robot_current))
+		return actual_robot_current;
+	else
+		throw std::runtime_error("unable to get state data for actual_robot_current");
+}
+
+std::uint32_t RTSIReceiveInterface::getActualDigitalOutputBits()
+{
+  std::uint32_t actual_digital_output_bits;
+  if (robot_state_->getStateData("actual_digital_output_bits", actual_digital_output_bits))
+    return actual_digital_output_bits;
+  else
+    throw std::runtime_error("unable to get state data for actual_digital_output_bits");
+}
+
+std::uint32_t RTSIReceiveInterface::getRuntimeState()
+{
+  std::uint32_t runtime_state;
+  if (robot_state_->getStateData("runtime_state", runtime_state))
+    return runtime_state;
+  else
+    throw std::runtime_error("unable to get state data for runtime_state");
+}
+
+std::vector<double> RTSIReceiveInterface::getElbowPosition()
+{
+	std::vector<double> elbow_position;
+	if (robot_state_->getStateData("elbow_position", elbow_position))
+	    return elbow_position;
+	else
+	    throw std::runtime_error("unable to get state data for elbow_position");
+}
+
+std::uint32_t RTSIReceiveInterface::getRobotStatusBits()
+{
+  std::uint32_t robot_status_bits;
+  if (robot_state_->getStateData("robot_status_bits", robot_status_bits))
+    return robot_status_bits;
+  else
+    throw std::runtime_error("unable to get state data for robot_status_bits");
+}
+
+std::uint32_t RTSIReceiveInterface::getSafetyStatusBits()
+{
+  std::uint32_t safety_status_bits;
+  if (robot_state_->getStateData("safety_status_bits", safety_status_bits))
+    return safety_status_bits;
+  else
+    throw std::runtime_error("unable to get state data for safety_status_bits");
+}
+
+std::uint32_t RTSIReceiveInterface::getAnalogIOTypes()
+{
+  std::uint32_t analog_io_types;
+  if (robot_state_->getStateData("analog_io_types", analog_io_types))
+    return analog_io_types;
+  else
+    throw std::runtime_error("unable to get state data for analog_io_types");
 }

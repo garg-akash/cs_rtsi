@@ -30,7 +30,7 @@ class RTSIReceiveInterface
 
     std::vector<double> getPayloadCog();
 
-    uint32_t getScriptControlLine();
+    std::uint32_t getScriptControlLine();
 
     double getTimestamp();
 
@@ -53,6 +53,38 @@ class RTSIReceiveInterface
     std::vector<double> getTargetTCPPose();
 
     std::vector<double> getTargetTCPSpeed();
+
+    std::uint32_t getActualDigitalInputBits();
+
+    std::vector<double> getJointTemperatures();
+
+    std::int32_t getRobotMode();
+
+    std::vector<std::int32_t> getJointMode();
+
+    std::int32_t getSafetyMode();
+
+    std::int32_t getSafetyStatus();
+
+    double getSpeedScaling();
+
+    double getTargeSpeedFraction();
+
+    double getActualRobotVoltage();
+
+    double getActualRobotCurrent();
+
+    std::uint32_t getActualDigitalOutputBits();
+
+    std::uint32_t getRuntimeState();
+
+    std::vector<double> getElbowPosition();
+
+    std::uint32_t getRobotStatusBits();
+
+    std::uint32_t getSafetyStatusBits();
+
+    std::uint32_t getAnalogIOTypes();
 
  private:
  	std::string hostip_;

@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 const int PORT = 30001;
-const char HOSTIP[] = "192.168.51.139";
+const char HOSTIP[] = "192.168.133.129";
 
 int main(int argc, char const *argv[])
 {
@@ -36,6 +36,7 @@ int main(int argc, char const *argv[])
   std::string spacestr = "  ";
   std::string spacestr2 = "    ";
   std::string spacestr3 = "      ";
+  std::string spacestr4 = "        ";
   cmd.append("def plotSin():\n");
   cmd.append(spacestr);
   cmd.append("global state_init\n");
@@ -44,11 +45,13 @@ int main(int argc, char const *argv[])
   cmd.append(spacestr2);
   cmd.append("state_init = get_actual_tcp_pose()\n");
   cmd.append(spacestr2);
-  cmd.append("x = read_input_float_register(0)\n");
+  cmd.append("flag_bit = read_input_boolean_register(64)\n");
   cmd.append(spacestr2);
-  cmd.append("y = read_input_float_register(1)\n");
+  cmd.append("x = state_init[0]\n");
   cmd.append(spacestr2);
-  cmd.append("z = read_input_float_register(2)\n");
+  cmd.append("y = state_init[1]\n");
+  cmd.append(spacestr2);
+  cmd.append("z = state_init[2]\n");
   cmd.append(spacestr2);
   cmd.append("Rx = state_init[3]\n");
   cmd.append(spacestr2);
@@ -56,25 +59,25 @@ int main(int argc, char const *argv[])
   cmd.append(spacestr2);
   cmd.append("Rz = state_init[5]\n");
   cmd.append(spacestr2);
-  cmd.append("if (x == 0):\n");
-  cmd.append(spacestr3);
-  cmd.append("x = state_init[0]\n");
+  cmd.append("print(\"flag : \", flag_bit)\n");
   cmd.append(spacestr2);
-  cmd.append("if (y == 0):\n");
+  cmd.append("if (flag_bit):\n");
   cmd.append(spacestr3);
-  cmd.append("y = state_init[1]\n");
-  cmd.append(spacestr2);
-  cmd.append("if (z == 0):\n");
+  cmd.append("x = read_input_float_register(0)\n");
   cmd.append(spacestr3);
-  cmd.append("z = state_init[2]\n");
-  cmd.append(spacestr2);
+  cmd.append("y = read_input_float_register(1)\n");
+  cmd.append(spacestr3);
+  cmd.append("z = read_input_float_register(2)\n");
+  cmd.append(spacestr3);
+  cmd.append("if (x != 0 and y != 0 and z != 0):\n");
+  cmd.append(spacestr4);
   cmd.append("print(\"x : \", x)\n");
-  cmd.append(spacestr2);
+  cmd.append(spacestr4);
   cmd.append("print(\"y : \", y)\n");
-  cmd.append(spacestr2);
+  cmd.append(spacestr4);
   cmd.append("print(\"z : \", z)\n");
-  cmd.append(spacestr2);
-  cmd.append("movel([x,y,z,Rx,Ry,Rz],a=1.4,v=1.05,t=0,r=0)\n");
+  cmd.append(spacestr4);
+  cmd.append("movel([x,y,z,Rx,Ry,Rz],a=0.7,v=0.5,t=0.5,r=0)\n");
   cmd.append(spacestr);
   cmd.append("end\n");
   cmd.append("end\n");

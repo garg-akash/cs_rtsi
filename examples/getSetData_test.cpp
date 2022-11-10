@@ -14,7 +14,7 @@ const std::string hostip = "192.168.133.129";
 int main(int argc, char const *argv[])
 {
   double frequency = 250;
-  double wave_T = 100;
+  double wave_T = 200; // translation [mm] in y-axis 
   double wave_freq = 1/wave_T;
   double wave_amp = 0.1;
   std::vector<std::string> variables = {"actual_TCP_pose"};
@@ -36,7 +36,10 @@ int main(int argc, char const *argv[])
     rtsi_io.setInputDoubleRegister(0,final_x);
     rtsi_io.setInputDoubleRegister(1,final_y);
     rtsi_io.setInputDoubleRegister(2,final_z);
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::cout << "NewX : " << tcp_pose[0] << "\n";
+    std::cout << "NewY : " << tcp_pose[1] << "\n";
+    std::cout << "NewZ : " << tcp_pose[2] << "\n";
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
   rtsi_io.setInputBitRegister(64,false); // Set the flag bit to False (Disable the TCP position update) 
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));

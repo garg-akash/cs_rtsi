@@ -24,7 +24,8 @@ typedef std::basic_string<unsigned char> ustring;
 
 const unsigned HEADER_SIZE = 3;
 #define RTSI_PROTOCOL_VERSION 1
-#define DEBUG_OUTPUT true
+#define DEBUG_OUTPUT false
+#define HEADER_OUTPUT false
 
 #if DEBUG_OUTPUT
 #define DEBUG(a)                                                \
@@ -139,9 +140,9 @@ bool RTSI::sendOutputSetup(const std::vector<std::string> &output_names, double 
   for (const auto &output_name : output_names)
     output_names_str += output_name + ",";
 
-  std::cout << "size 1 : " << freq_packed.size() << "\n";
+  // std::cout << "size 1 : " << freq_packed.size() << "\n";
   std::copy(output_names_str.begin(), output_names_str.end(), std::back_inserter(freq_packed));
-  std::cout << "size 2 : " << freq_packed.size() << "\n";
+  // std::cout << "size 2 : " << freq_packed.size() << "\n";
   std::string payload(std::begin(freq_packed), std::end(freq_packed));
   sendAll(cmd, payload);
   DEBUG("Done sending RTSI_CONTROL_PACKAGE_SETUP_OUTPUTS");
@@ -307,15 +308,19 @@ void RTSI::sendAll(const std::uint8_t &command, std::string payload)
   // Create vector<char> that includes the header
   std::vector<unsigned char> header_packed;
   std::copy(buffer, buffer + sizeof(buffer), std::back_inserter(header_packed));
-  std::cout << "header_packed (size and type): \n";
-  for(auto a : header_packed)
-  	std::cout << a << "\n";
+  #if HEADER_OUTPUT
+    std::cout << "header_packed (size and type): \n";
+    for(auto a : header_packed)
+      std::cout << a << "\n";
+  #endif
   // Add the payload to the header_packed vector
   ustring payloadU = reinterpret_cast<const unsigned char*>(payload.c_str());
   std::copy(payload.begin(), payload.end(), std::back_inserter(header_packed));
-  std::cout << "header_packed (size, type and payload): \n";
-  for(auto a : header_packed)
-  	std::cout << +a << "\n";
+  #if HEADER_OUTPUT
+    std::cout << "header_packed (size, type and payload): \n";
+    for(auto a : header_packed)
+      std::cout << +a << "\n";
+  #endif
   std::string sent(header_packed.begin(), header_packed.end());
   // std::cout << "sent: " << sent << "\n";
   DEBUG("SENDING buf containing: " << sent << " with len: " << sent.size());
@@ -395,7 +400,7 @@ void RTSI::receive()
 	uint32_t message_offset = 0;
 	uint16_t msg_size = RTSIUtility::getUInt16(data, message_offset);
 	uint8_t msg_cmd = data.at(2);
-	std::cout << unsigned(data[0]) << " " << unsigned(data[1]) << " " << msg_size << "\n";
+	// std::cout << unsigned(data[0]) << " " << unsigned(data[1]) << " " << msg_size << "\n";
 	DEBUG("Control Header: ")
 	DEBUG("size is: " << msg_size);
 	DEBUG("command is: " << static_cast<int>(msg_cmd));
@@ -536,9 +541,9 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
   {
     message_offset = 0;
     RTSIControlHeader packet_header = RTSIUtility::readRTSIHeader(buffer_, message_offset);
-    std::cout << "RTSIControlHeader: " << std::endl;
-    std::cout << "size is: " << packet_header.msg_size << std::endl;
-    std::cout << "command is: " << static_cast<int>(packet_header.msg_cmd) << std::endl;
+    DEBUG("RTSIControlHeader: ");
+    DEBUG("size is: " << packet_header.msg_size);
+    DEBUG("command is: " << static_cast<int>(packet_header.msg_cmd));
 
     if (buffer_.size() >= packet_header.msg_size)
     {
@@ -562,7 +567,7 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
       {
         packet_data_offset = 0;
         char subs_id = RTSIUtility::getUChar(packet, packet_data_offset);
-        std::cout << "subscription_id : " << unsigned(subs_id) << "\n";
+        DEBUG("subscription_id : " << unsigned(subs_id));
         robot_state->lockUpdateStateMutex();
 
         // Read all the variables specified by the user.
@@ -576,40 +581,43 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
               std::vector<double> parsed_data;
               if (output_name == "payload_cog" || output_name == "elbow_position")
               {  
+                DEBUG("Parsing 3D");
                 parsed_data = RTSIUtility::unpackVector3d(packet, packet_data_offset);
-              	std::cout << "Parsing 3D\n";
               }
               else
               {  
+                DEBUG("Parsing 6D");
                 parsed_data = RTSIUtility::unpackVector6d(packet, packet_data_offset);
-              	std::cout << "Parsing 6D\n";
               }
               robot_state->setStateData(output_name, parsed_data);
             }
             else if (entry.type() == typeid(double))
             {
-              std::cout << "Parsing 1D\n";
+              DEBUG("Parsing 1D");
               double parsed_data = RTSIUtility::getDouble(packet, packet_data_offset);
               robot_state->setStateData(output_name, parsed_data);
             }
             else if (entry.type() == typeid(int32_t))
             {
-              std::cout << "Parsing Int32\n";
+              DEBUG("Parsing Int32");
               int32_t parsed_data = RTSIUtility::getInt32(packet, packet_data_offset);
               robot_state->setStateData(output_name, parsed_data);
             }
             else if (entry.type() == typeid(uint32_t))
             {
+              DEBUG("Parsing Uint32");
               uint32_t parsed_data = RTSIUtility::getUInt32(packet, packet_data_offset);
               robot_state->setStateData(output_name, parsed_data);
             }
             else if (entry.type() == typeid(uint64_t))
             {
+              DEBUG("Parsing Uint64");
               uint64_t parsed_data = RTSIUtility::getUInt64(packet, packet_data_offset);
               robot_state->setStateData(output_name, parsed_data);
             }
             else if (entry.type() == typeid(std::vector<int32_t>))
             {
+              DEBUG("Parsing 6 Int32");
               std::vector<int32_t> parsed_data = RTSIUtility::unpackVector6Int32(packet, packet_data_offset);
               robot_state->setStateData(output_name, parsed_data);
             }

@@ -9,7 +9,7 @@ Description: example script to test input & output subscription
 #include <cs_rtsi/rtsi_io_interface.h>
 #include <thread>
 
-const std::string hostip = "192.168.51.139";
+const std::string hostip = "192.168.133.129";
 
 int main(int argc, char const *argv[])
 {
@@ -25,17 +25,21 @@ int main(int argc, char const *argv[])
   std::cout << "InitX : " << tcp_pose[0] << "\n";
   std::cout << "InitY : " << tcp_pose[1] << "\n";
   std::cout << "InitZ : " << tcp_pose[2] << "\n";
+  // rtsi_io.setInputBitRegister(64,true); // Set the flag bit to True (Enable the TCP position update)
+  // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  for(int t = 0; t < wave_T; t++)
+  {
+    double final_x = tcp_pose[0];
+    double final_y = tcp_pose[1] + 0.001 * t;
+    double final_z = tcp_pose[2] + wave_amp * sin(2 * M_PI * wave_freq * t);
+    rtsi_io.setInputBitRegister(64,true); // Set the flag bit to True (Enable the TCP position update)
+    rtsi_io.setInputDoubleRegister(0,final_x);
+    rtsi_io.setInputDoubleRegister(1,final_y);
+    rtsi_io.setInputDoubleRegister(2,final_z);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  }
+  rtsi_io.setInputBitRegister(64,false); // Set the flag bit to False (Disable the TCP position update) 
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  // for(int t = 0; t < wave_T; t++)
-  // {
-  //   double final_x = tcp_pose[0];
-  //   double final_y = tcp_pose[1] + 0.001 * t;
-  //   double final_z = tcp_pose[2] + wave_amp * sin(2 * M_PI * wave_freq * t);
-  //   rtsi_io.setInputDoubleRegisterPosition(final_x, final_y, final_z);
-  //   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  // }
-  // rtsi_io.setInputDoubleRegisterPosition(0, 0, 0);
-  // std::cout << "IO set\n";
 
   return 0;
 }

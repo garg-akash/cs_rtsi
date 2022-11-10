@@ -24,7 +24,7 @@ int main(int argc, char const *argv[])
   rtsi_io.setInputDoubleRegister(47,0.19);
   rtsi_io.setInputBitRegister0to31(1);
   rtsi_io.setInputBitRegister32to63(3);
-  rtsi_io.setInputBitRegister(88,true);
+  rtsi_io.setInputBitRegister(64,false);
   // for(int i = 0; i  < 50; i++)
   // {
   //   rtsi_io.setInputDoubleRegisterPosition(0.671, -0.460 + 0.001*i, 0.542);

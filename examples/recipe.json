@@ -1,0 +1,8 @@
+{
+	"output" : [
+			"timestamp",
+			"actual_joint_positions",
+			"actual_TCP_pose",
+			"payload_cog",
+			"robot_mode"]
+}

@@ -86,6 +86,8 @@ class RTSIReceiveInterface
 
     std::uint32_t getAnalogIOTypes();
 
+    std::shared_ptr<RobotState> robot_state_;
+
  private:
  	std::string hostip_;
  	double frequency_;
@@ -96,6 +98,5 @@ class RTSIReceiveInterface
  	std::shared_ptr<RTSI> rtsi_;
     std::atomic<bool> stop_receive_thread{false};
     std::shared_ptr<boost::thread> th_;
- 	std::shared_ptr<RobotState> robot_state_;
     size_t no_bytes_avail_cnt_;
 };

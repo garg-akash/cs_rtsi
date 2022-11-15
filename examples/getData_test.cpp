@@ -15,7 +15,7 @@ Description: example script to test output subscription
 #include <string>
 #include <boost/variant.hpp>
 
-using rtsi_type_variant_ = boost::variant<uint32_t, uint64_t, int32_t, double, std::vector<double>,
+using rtsi_type_variant_ = boost::variant<bool, uint8_t, uint32_t, uint64_t, int32_t, double, std::vector<double>,
     											 std::vector<int32_t>>;
 
 const std::string hostip = "192.168.133.129";
@@ -66,11 +66,27 @@ int main(int argc, char const *argv[])
       	else
 					throw std::runtime_error("unable to get state data for " + v);
       }
-	    else if (entry.type() == typeid(int32_t))
+	    else if (entry.type() == typeid(bool))
+			{		
+				bool parsed_data;
+				if(rtsi_receive.robot_state_->getStateData(v, parsed_data))
+					std::cout << "\n" << v << " :\n" << parsed_data << "\n";
+				else
+					throw std::runtime_error("unable to get state data for " + v);
+			}
+			else if (entry.type() == typeid(int32_t))
 			{		
 				std::int32_t parsed_data;
 				if(rtsi_receive.robot_state_->getStateData(v, parsed_data))
 					std::cout << "\n" << v << " :\n" << parsed_data << "\n";
+				else
+					throw std::runtime_error("unable to get state data for " + v);
+			}
+			else if (entry.type() == typeid(uint8_t))
+			{		
+				std::uint8_t parsed_data;
+				if(rtsi_receive.robot_state_->getStateData(v, parsed_data))
+					std::cout << "\n" << v << " :\n" << +parsed_data << "\n";
 				else
 					throw std::runtime_error("unable to get state data for " + v);
 			}

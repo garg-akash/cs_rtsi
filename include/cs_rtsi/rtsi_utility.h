@@ -69,6 +69,13 @@ class RTSIUtility
   	return output;
   }
 
+  static inline bool getBool(const std::vector<char> &data, uint32_t &message_offset)
+  {
+    bool output = data[message_offset];
+    message_offset += 1;
+    return output;
+  }
+
   static inline uint8_t getUInt8(const std::vector<char> &data, uint32_t &message_offset)
   {
   	uint8_t output = data[message_offset];

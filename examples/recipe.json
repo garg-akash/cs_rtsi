@@ -4,7 +4,10 @@
 			"actual_joint_positions",
 			"actual_TCP_pose",
 			"payload_cog",
-			"robot_mode"],
+			"robot_mode",
+			"input_bit_registers0_to_31",
+			"tool_analog_input_types",
+			"input_double_register19"],
 
 	"input" : [
 			{"subs" : "speed_slider_fraction",
@@ -27,11 +30,11 @@
 			 "value" : 8},
 			{"subs" : "input_bit_registerX",
 			 "number" : 120,
-			 "value" : true},
+			 "value" : false},
 			{"subs" : "input_int_registerX",
 			 "number" : 47,
 			 "value" : 22},
 			{"subs" : "input_double_registerX",
 			 "number" : 19,
-			 "value" : 567.7895}]
+			 "value" : 167.7895}]
 }

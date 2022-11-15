@@ -350,6 +350,15 @@ double RTSIReceiveInterface::getActualRobotCurrent()
 		throw std::runtime_error("unable to get state data for actual_robot_current");
 }
 
+std::vector<double> RTSIReceiveInterface::getActualJointVoltage()
+{
+	std::vector<double> actual_joint_voltage;
+	if(robot_state_->getStateData("actual_joint_voltage", actual_joint_voltage))
+		return actual_joint_voltage;
+	else
+		throw std::runtime_error("unable to get state data for actual_joint_voltage");
+}
+
 std::uint32_t RTSIReceiveInterface::getActualDigitalOutputBits()
 {
   std::uint32_t actual_digital_output_bits;
@@ -402,4 +411,298 @@ std::uint32_t RTSIReceiveInterface::getAnalogIOTypes()
     return analog_io_types;
   else
     throw std::runtime_error("unable to get state data for analog_io_types");
+}
+
+double RTSIReceiveInterface::getStandardAnalogInput0()
+{
+	double standard_analog_input0;
+	if(robot_state_->getStateData("standard_analog_input0", standard_analog_input0))
+		return standard_analog_input0;
+	else
+		throw std::runtime_error("unable to get state data for standard_analog_input0");
+}
+
+double RTSIReceiveInterface::getStandardAnalogInput1()
+{
+	double standard_analog_input1;
+	if(robot_state_->getStateData("standard_analog_input1", standard_analog_input1))
+		return standard_analog_input1;
+	else
+		throw std::runtime_error("unable to get state data for standard_analog_input1");
+}
+
+double RTSIReceiveInterface::getStandardAnalogOutput0()
+{
+	double standard_analog_output0;
+	if(robot_state_->getStateData("standard_analog_output0", standard_analog_output0))
+		return standard_analog_output0;
+	else
+		throw std::runtime_error("unable to get state data for standard_analog_output0");
+}
+
+double RTSIReceiveInterface::getStandardAnalogOutput1()
+{
+	double standard_analog_output1;
+	if(robot_state_->getStateData("standard_analog_output1", standard_analog_output1))
+		return standard_analog_output1;
+	else
+		throw std::runtime_error("unable to get state data for standard_analog_output1");
+}
+
+double RTSIReceiveInterface::getIOCurrent()
+{
+	double io_current;
+	if(robot_state_->getStateData("io_current", io_current))
+		return io_current;
+	else
+		throw std::runtime_error("unable to get state data for io_current");
+}
+
+std::uint32_t RTSIReceiveInterface::getToolMode()
+{
+  std::uint32_t tool_mode;
+  if (robot_state_->getStateData("tool_mode", tool_mode))
+    return tool_mode;
+  else
+    throw std::runtime_error("unable to get state data for tool_mode");
+}
+
+std::uint32_t RTSIReceiveInterface::getToolAnalogInputTypes()
+{
+  std::uint32_t tool_analog_input_types;
+  if (robot_state_->getStateData("tool_analog_input_types", tool_analog_input_types))
+    return tool_analog_input_types;
+  else
+    throw std::runtime_error("unable to get state data for tool_analog_input_types");
+}
+
+std::uint32_t RTSIReceiveInterface::getToolAnalogOutputTypes()
+{
+  std::uint32_t tool_analog_output_types;
+  if (robot_state_->getStateData("tool_analog_output_types", tool_analog_output_types))
+    return tool_analog_output_types;
+  else
+    throw std::runtime_error("unable to get state data for tool_analog_output_types");
+}
+
+double RTSIReceiveInterface::getToolAnalogInput()
+{
+	double tool_analog_input;
+	if(robot_state_->getStateData("tool_analog_input", tool_analog_input))
+		return tool_analog_input;
+	else
+		throw std::runtime_error("unable to get state data for tool_analog_input");
+}
+
+double RTSIReceiveInterface::getToolAnalogOutput()
+{
+	double tool_analog_output;
+	if(robot_state_->getStateData("tool_analog_output", tool_analog_output))
+		return tool_analog_output;
+	else
+		throw std::runtime_error("unable to get state data for tool_analog_output");
+}
+
+double RTSIReceiveInterface::getToolOutputVoltage()
+{
+	double tool_output_voltage;
+	if(robot_state_->getStateData("tool_output_voltage", tool_output_voltage))
+		return tool_output_voltage;
+	else
+		throw std::runtime_error("unable to get state data for tool_output_voltage");
+}
+
+double RTSIReceiveInterface::getToolOutputCurrent()
+{
+	double tool_output_current;
+	if(robot_state_->getStateData("tool_output_current", tool_output_current))
+		return tool_output_current;
+	else
+		throw std::runtime_error("unable to get state data for tool_output_current");
+}
+
+double RTSIReceiveInterface::getToolTemperature()
+{
+	double tool_temperature;
+	if(robot_state_->getStateData("tool_temperature", tool_temperature))
+		return tool_temperature;
+	else
+		throw std::runtime_error("unable to get state data for tool_temperature");
+}
+
+std::uint32_t RTSIReceiveInterface::getOutputBitRegisters0to31()
+{
+  std::uint32_t output_bit_registers0_to_31;
+  if (robot_state_->getStateData("output_bit_registers0_to_31", output_bit_registers0_to_31))
+    return output_bit_registers0_to_31;
+  else
+    throw std::runtime_error("unable to get state data for output_bit_registers0_to_31");
+}
+
+std::uint32_t RTSIReceiveInterface::getOutputBitRegisters32to63()
+{
+  std::uint32_t output_bit_registers32_to_63;
+  if (robot_state_->getStateData("output_bit_registers32_to_63", output_bit_registers32_to_63))
+    return output_bit_registers32_to_63;
+  else
+    throw std::runtime_error("unable to get state data for output_bit_registers32_to_63");
+}
+
+std::uint8_t RTSIReceiveInterface::getToolDigitalMode()
+{
+  std::uint8_t tool_digital_mode;
+  if (robot_state_->getStateData("tool_digital_mode", tool_digital_mode))
+    return tool_digital_mode;
+  else
+    throw std::runtime_error("unable to get state data for tool_digital_mode");
+}
+
+std::uint8_t RTSIReceiveInterface::getToolDigital0Mode()
+{
+  std::uint8_t tool_digital0_mode;
+  if (robot_state_->getStateData("tool_digital0_mode", tool_digital0_mode))
+    return tool_digital0_mode;
+  else
+    throw std::runtime_error("unable to get state data for tool_digital0_mode");
+}
+
+std::uint8_t RTSIReceiveInterface::getToolDigital1Mode()
+{
+  std::uint8_t tool_digital1_mode;
+  if (robot_state_->getStateData("tool_digital1_mode", tool_digital1_mode))
+    return tool_digital1_mode;
+  else
+    throw std::runtime_error("unable to get state data for tool_digital1_mode");
+}
+
+std::uint8_t RTSIReceiveInterface::getToolDigital2Mode()
+{
+  std::uint8_t tool_digital2_mode;
+  if (robot_state_->getStateData("tool_digital2_mode", tool_digital2_mode))
+    return tool_digital2_mode;
+  else
+    throw std::runtime_error("unable to get state data for tool_digital2_mode");
+}
+
+std::uint8_t RTSIReceiveInterface::getToolDigital3Mode()
+{
+  std::uint8_t tool_digital3_mode;
+  if (robot_state_->getStateData("tool_digital3_mode", tool_digital3_mode))
+    return tool_digital3_mode;
+  else
+    throw std::runtime_error("unable to get state data for tool_digital3_mode");
+}
+
+std::uint32_t RTSIReceiveInterface::getInputBitRegisters0to31()
+{
+  std::uint32_t input_bit_registers0_to_31;
+  if (robot_state_->getStateData("input_bit_registers0_to_31", input_bit_registers0_to_31))
+    return input_bit_registers0_to_31;
+  else
+    throw std::runtime_error("unable to get state data for input_bit_registers0_to_31");
+}
+
+std::uint32_t RTSIReceiveInterface::getInputBitRegisters32to63()
+{
+  std::uint32_t input_bit_registers32_to_63;
+  if (robot_state_->getStateData("input_bit_registers32_to_63", input_bit_registers32_to_63))
+    return input_bit_registers32_to_63;
+  else
+    throw std::runtime_error("unable to get state data for input_bit_registers32_to_63");
+}
+
+bool RTSIReceiveInterface::getOutputBitRegister(int output_id)
+{
+  if (!isWithinBounds(output_id, 0, 127))
+  {
+    throw std::range_error("The supported range of getOutputBitRegister() is [0-127], you specified: "
+    											 + std::to_string(output_id));
+  }
+  
+  std::string output_bit_register_key = "output_bit_register" + std::to_string(output_id);
+  bool output_bit_register_val;
+  if (robot_state_->getStateData(output_bit_register_key, output_bit_register_val))
+    return output_bit_register_val;
+  else
+    throw std::runtime_error("unable to get state data for "+output_bit_register_key);
+}
+
+std::int32_t RTSIReceiveInterface::getOutputIntRegister(int output_id)
+{
+  if (!isWithinBounds(output_id, 0, 47))
+  {
+    throw std::range_error("The supported range of getOutputIntRegister() is [0-47], you specified: "
+    											 + std::to_string(output_id));
+  }
+  
+  std::string output_int_register_key = "output_int_register" + std::to_string(output_id);
+  std::int32_t output_int_register_val;
+  if (robot_state_->getStateData(output_int_register_key, output_int_register_val))
+    return output_int_register_val;
+  else
+    throw std::runtime_error("unable to get state data for "+output_int_register_key);
+}
+
+double RTSIReceiveInterface::getOutputDoubleRegister(int output_id)
+{
+  if (!isWithinBounds(output_id, 0, 47))
+  {
+    throw std::range_error("The supported range of getOutputDoubleRegister() is [0-47], you specified: "
+    											 + std::to_string(output_id));
+  }
+  
+  std::string output_double_register_key = "output_int_register" + std::to_string(output_id);
+  std::int32_t output_double_register_val;
+  if (robot_state_->getStateData(output_double_register_key, output_double_register_val))
+    return output_double_register_val;
+  else
+    throw std::runtime_error("unable to get state data for "+output_double_register_key);
+}
+
+bool RTSIReceiveInterface::getInputBitRegister(int input_id)
+{
+  if (!isWithinBounds(input_id, 0, 127))
+  {
+    throw std::range_error("The supported range of getInputBitRegister() is [0-127], you specified: " 
+    												+ std::to_string(input_id));
+  }
+  
+  std::string input_bit_register_key = "input_bit_register" + std::to_string(input_id);
+  bool input_bit_register_val;
+  if (robot_state_->getStateData(input_bit_register_key, input_bit_register_val))
+    return input_bit_register_val;
+  else
+    throw std::runtime_error("unable to get state data for "+input_bit_register_key);
+}
+
+std::int32_t RTSIReceiveInterface::getInputIntRegister(int input_id)
+{
+  if (!isWithinBounds(input_id, 0, 47))
+  {
+    throw std::range_error("The supported range of getIutputIntRegister() is [0-47], you specified: "
+    											 + std::to_string(input_id));
+  }
+  
+  std::string input_int_register_key = "input_int_register" + std::to_string(input_id);
+  std::int32_t input_int_register_val;
+  if (robot_state_->getStateData(input_int_register_key, input_int_register_val))
+    return input_int_register_val;
+  else
+    throw std::runtime_error("unable to get state data for "+input_int_register_key);
+}
+
+double RTSIReceiveInterface::getInputDoubleRegister(int input_id)
+{
+  if (!isWithinBounds(input_id, 0, 47))
+  {
+    throw std::range_error("The supported range of getInputDoubleRegister() is [0-47], you specified: "
+    											 + std::to_string(input_id));
+  }
+  
+  std::string input_double_register_key = "input_int_register" + std::to_string(input_id);
+  std::int32_t input_double_register_val;
+  if (robot_state_->getStateData(input_double_register_key, input_double_register_val))
+    return input_double_register_val;
+  else
+    throw std::runtime_error("unable to get state data for "+input_double_register_key);
 }

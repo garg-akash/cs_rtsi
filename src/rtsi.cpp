@@ -515,8 +515,8 @@ void RTSI::receive()
     }
 
     default:
-    		DEBUG("Unknown Command: " << static_cast<int>(msg_cmd));
-    		break;
+  		DEBUG("Unknown Command: " << static_cast<int>(msg_cmd));
+  		break;
 	}
 }
 
@@ -597,10 +597,22 @@ boost::system::error_code RTSI::receiveData(std::shared_ptr<RobotState> &robot_s
               double parsed_data = RTSIUtility::getDouble(packet, packet_data_offset);
               robot_state->setStateData(output_name, parsed_data);
             }
+            else if (entry.type() == typeid(bool))
+            {
+              DEBUG("Parsing Bool");
+              bool parsed_data = RTSIUtility::getBool(packet, packet_data_offset);
+              robot_state->setStateData(output_name, parsed_data);
+            }
             else if (entry.type() == typeid(int32_t))
             {
               DEBUG("Parsing Int32");
               int32_t parsed_data = RTSIUtility::getInt32(packet, packet_data_offset);
+              robot_state->setStateData(output_name, parsed_data);
+            }
+            else if (entry.type() == typeid(uint8_t))
+            {
+              DEBUG("Parsing Uint8");
+              uint8_t parsed_data = RTSIUtility::getUInt8(packet, packet_data_offset);
               robot_state->setStateData(output_name, parsed_data);
             }
             else if (entry.type() == typeid(uint32_t))

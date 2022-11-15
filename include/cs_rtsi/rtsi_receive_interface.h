@@ -24,6 +24,12 @@ class RTSIReceiveInterface
 
 	bool setupOutputRecipes(const double& frequency);
 
+    template <typename T>
+    bool isWithinBounds(const T& value, const T& low, const T& high)
+    {
+      return (low <= value && value <= high);
+    }
+
     void receiveCallback();
 
     double getPayloadMass();
@@ -74,6 +80,8 @@ class RTSIReceiveInterface
 
     double getActualRobotCurrent();
 
+    std::vector<double> getActualJointVoltage();
+
     std::uint32_t getActualDigitalOutputBits();
 
     std::uint32_t getRuntimeState();
@@ -85,6 +93,62 @@ class RTSIReceiveInterface
     std::uint32_t getSafetyStatusBits();
 
     std::uint32_t getAnalogIOTypes();
+
+    double getStandardAnalogInput0();
+
+    double getStandardAnalogInput1();
+
+    double getStandardAnalogOutput0();
+
+    double getStandardAnalogOutput1();
+
+    double getIOCurrent();
+
+    std::uint32_t getToolMode();
+
+    std::uint32_t getToolAnalogInputTypes();
+
+    std::uint32_t getToolAnalogOutputTypes();
+
+    double getToolAnalogInput();
+
+    double getToolAnalogOutput();
+
+    double getToolOutputVoltage();
+
+    double getToolOutputCurrent();
+
+    double getToolTemperature();
+
+    std::uint32_t getOutputBitRegisters0to31();
+
+    std::uint32_t getOutputBitRegisters32to63();
+
+    std::uint8_t getToolDigitalMode();
+
+    std::uint8_t getToolDigital0Mode();
+
+    std::uint8_t getToolDigital1Mode();
+
+    std::uint8_t getToolDigital2Mode();
+
+    std::uint8_t getToolDigital3Mode();
+
+    std::uint32_t getInputBitRegisters0to31();
+
+    std::uint32_t getInputBitRegisters32to63();
+
+    bool getOutputBitRegister(int output_id);
+
+    std::int32_t getOutputIntRegister(int output_id);
+
+    double getOutputDoubleRegister(int output_id);
+
+    bool getInputBitRegister(int input_id);
+
+    std::int32_t getInputIntRegister(int input_id);
+
+    double getInputDoubleRegister(int input_id);
 
     std::shared_ptr<RobotState> robot_state_;
 

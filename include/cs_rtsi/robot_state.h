@@ -7,7 +7,7 @@
 #include <mutex>
 #include <iostream>
 
-using rtsi_type_variant_ = boost::variant<uint32_t, uint64_t, int32_t, double, std::vector<double>,
+using rtsi_type_variant_ = boost::variant<bool, uint8_t, uint32_t, uint64_t, int32_t, double, std::vector<double>,
     std::vector<int32_t>>;
 
 class RobotState

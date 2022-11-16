@@ -13,7 +13,7 @@ std::unordered_map<std::string, rtsi_type_variant_> RobotState::state_types_ {
 	{ "timestamp", double() },
   { "target_joint_positions", std::vector<double>() },
   { "target_joint_speeds", std::vector<double>() },
-  { "target_joint_torques", std::vector<double>() },
+  { "actual_joint_torques", std::vector<double>() },
   { "actual_joint_positions", std::vector<double>() },
   { "actual_joint_speeds", std::vector<double>() },
   { "actual_joint_current", std::vector<double>() },

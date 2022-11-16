@@ -190,11 +190,11 @@ std::vector<double> RTSIReceiveInterface::getTargetJointSpeeds()
 
 std::vector<double> RTSIReceiveInterface::getTargetJointTorques()
 {
-	std::vector<double> target_joint_torques;
-	if (robot_state_->getStateData("target_joint_torques", target_joint_torques))
-		return target_joint_torques;
+	std::vector<double> actual_joint_torques;
+	if (robot_state_->getStateData("actual_joint_torques", actual_joint_torques))
+		return actual_joint_torques;
 	else
-		throw std::runtime_error("unable to get state data for target_joint_torques");
+		throw std::runtime_error("unable to get state data for actual_joint_torques");
 }
 
 std::vector<double> RTSIReceiveInterface::getActualJointPositions()
@@ -651,7 +651,7 @@ double RTSIReceiveInterface::getOutputDoubleRegister(int output_id)
     											 + std::to_string(output_id));
   }
   
-  std::string output_double_register_key = "output_int_register" + std::to_string(output_id);
+  std::string output_double_register_key = "output_double_register" + std::to_string(output_id);
   std::int32_t output_double_register_val;
   if (robot_state_->getStateData(output_double_register_key, output_double_register_val))
     return output_double_register_val;
@@ -699,7 +699,7 @@ double RTSIReceiveInterface::getInputDoubleRegister(int input_id)
     											 + std::to_string(input_id));
   }
   
-  std::string input_double_register_key = "input_int_register" + std::to_string(input_id);
+  std::string input_double_register_key = "input_double_register" + std::to_string(input_id);
   std::int32_t input_double_register_val;
   if (robot_state_->getStateData(input_double_register_key, input_double_register_val))
     return input_double_register_val;

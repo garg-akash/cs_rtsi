@@ -44,7 +44,7 @@ class RTSIReceiveInterface
 
     std::vector<double> getTargetJointSpeeds();
 
-    std::vector<double> getTargetJointTorques();
+    std::vector<double> getActualJointTorques();
     
     std::vector<double> getActualJointPositions();
 

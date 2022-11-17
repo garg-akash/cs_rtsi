@@ -1,6 +1,7 @@
 /*
 Author: Elite_akashgarg
 CreateDate: 2022-11-09
+LastEdited: 2022-11-17
 Description: handles rtsi output subscription
 */
 #include <cs_rtsi/robot_state.h>
@@ -188,7 +189,7 @@ std::vector<double> RTSIReceiveInterface::getTargetJointSpeeds()
 		throw std::runtime_error("unable to get state data for target_joint_speeds");
 }
 
-std::vector<double> RTSIReceiveInterface::getTargetJointTorques()
+std::vector<double> RTSIReceiveInterface::getActualJointTorques()
 {
 	std::vector<double> actual_joint_torques;
 	if (robot_state_->getStateData("actual_joint_torques", actual_joint_torques))

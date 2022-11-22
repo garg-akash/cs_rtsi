@@ -74,7 +74,7 @@ class RTSIReceiveInterface
 
     double getSpeedScaling();
 
-    double getTargeSpeedFraction();
+    double getTargetSpeedFraction();
 
     double getActualRobotVoltage();
 

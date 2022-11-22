@@ -1,6 +1,7 @@
 /*
 Author: Elite_akashgarg
 CreateDate: 2022-11-09
+LastEdited: 2022-11-22
 Description: handles rtsi input subscription
 */
 #include <cs_rtsi/rtsi.h>
@@ -206,7 +207,7 @@ bool RTSIIOInterface::setInputDoubleRegister(int input_id, double value)
   return sendCommand(robot_cmd);
 }
 
-bool RTSIIOInterface::setInputBitRegister0to31(std::uint32_t value)
+bool RTSIIOInterface::setInputBitRegisters0to31(std::uint32_t value)
 {
   RTSI::RobotCommand robot_cmd;
   robot_cmd.type_ = RTSI::RobotCommand::Type::SET_INPUT_BIT_REGISTER_X_TO_Y;
@@ -215,7 +216,7 @@ bool RTSIIOInterface::setInputBitRegister0to31(std::uint32_t value)
   return sendCommand(robot_cmd);
 }
 
-bool RTSIIOInterface::setInputBitRegister32to63(std::uint32_t value)
+bool RTSIIOInterface::setInputBitRegisters32to63(std::uint32_t value)
 {
   RTSI::RobotCommand robot_cmd;
   robot_cmd.type_ = RTSI::RobotCommand::Type::SET_INPUT_BIT_REGISTER_X_TO_Y;

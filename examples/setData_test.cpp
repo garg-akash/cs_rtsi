@@ -1,7 +1,7 @@
 /*
 Author: Elite_akashgarg
 CreateDate: 2022-11-09
-LastEdited: 2022-11-15
+LastEdited: 2022-11-22
 Description: example script to test input subscription
 */
 #include <cs_rtsi/rtsi_io_interface.h>
@@ -50,10 +50,10 @@ int main(int argc, char const *argv[])
     }
 
     else if(i["subs"].asString() == "input_bit_registers0_to_31")
-      rtsi_io.setInputBitRegister0to31(i["value"].asInt());
+      rtsi_io.setInputBitRegisters0to31(i["value"].asInt());
 
     else if(i["subs"].asString() == "input_bit_registers32_to_64")
-      rtsi_io.setInputBitRegister32to63(i["value"].asInt());
+      rtsi_io.setInputBitRegisters32to63(i["value"].asInt());
 
     else if(i["subs"].asString() == "input_bit_registerX")
       rtsi_io.setInputBitRegister(i["number"].asInt(), i["value"].asBool());

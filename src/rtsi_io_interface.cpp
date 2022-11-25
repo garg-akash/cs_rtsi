@@ -38,6 +38,12 @@ RTSIIOInterface::~RTSIIOInterface()
       rtsi_->disconnect();
 }
 
+std::string RTSIIOInterface::getPluginName()
+{
+  return "ELITE ROBOT RTSI_IO_INTERFACE";
+}
+
+
 void RTSIIOInterface::disconnect()
 {
   if(rtsi_ != nullptr)
@@ -281,4 +287,15 @@ bool RTSIIOInterface::sendCommand(const RTSI::RobotCommand &cmd)
     // return sendCommand(cmd);
   }
   return false;
+}
+
+extern "C" void* createRTSIIOInstance(std::string hostip, bool verbose, bool use_upper_range_registers)
+{
+  static RTSIIOInterfaceAPI* rtsi_io = nullptr;
+  if(rtsi_io == nullptr)
+  {
+    rtsi_io = new RTSIIOInterface(hostip, verbose, use_upper_range_registers);
+  }
+  // rtsi_io->setStandardDigitalOut(0,true);
+  return rtsi_io;
 }

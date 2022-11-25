@@ -3,7 +3,7 @@ project(cs_client_rtsi)
 
 find_package(Boost REQUIRED COMPONENTS system thread program_options)
 find_package(Threads)
-add_subdirectory(src)
+add_subdirectory(src pluginScript)
 find_package(jsoncpp REQUIRED)
 
 add_executable(connect_test examples/connect_test.cpp)
@@ -25,3 +25,8 @@ add_executable(getSetData_test examples/getSetData_test.cpp)
 target_include_directories(getSetData_test PUBLIC include)
 target_link_directories(getSetData_test PRIVATE src)
 target_link_libraries(getSetData_test libRTSI Boost::thread)
+
+add_executable(SamplePlugIn pluginScript/SamplePlugIn.cpp)
+target_include_directories(SamplePlugIn PUBLIC include)
+target_link_directories(SamplePlugIn PRIVATE src)
+target_link_libraries(SamplePlugIn libRTSI ${CMAKE_DL_LIBS} Boost::thread)

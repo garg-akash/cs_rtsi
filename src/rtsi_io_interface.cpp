@@ -289,7 +289,7 @@ bool RTSIIOInterface::sendCommand(const RTSI::RobotCommand &cmd)
   return false;
 }
 
-extern "C" void* createRTSIIOInstance(std::string hostip, bool verbose, bool use_upper_range_registers)
+void* createRTSIIOInstance(std::string hostip, bool verbose, bool use_upper_range_registers)
 {
   static RTSIIOInterfaceAPI* rtsi_io = nullptr;
   if(rtsi_io == nullptr)

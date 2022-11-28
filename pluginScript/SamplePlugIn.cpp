@@ -6,6 +6,8 @@
 #include <iostream>
 #include <cs_rtsi/rtsi_io_interface_api.h>
 
+const std::string hostip = "192.168.133.129";
+const bool verbose = true;
 std::string extension(char* f)
 {
   std::string file_name(f);
@@ -47,12 +49,7 @@ class PlugInObject
 
         void* (*createRTSIIOInstance)(std::string, bool, bool);
         createRTSIIOInstance = (void* (*)(std::string, bool, bool))dlsym(handle, "createRTSIIOInstance");
-        RTSIIOInterfaceAPI* instance =  static_cast<RTSIIOInterfaceAPI *>(createRTSIIOInstance("192.168.133.129", true, false));
-        // instance = 
-        // if(!instance)
-        //   std::cout << "Instance not created\n";
-        // RTSIIOInterface* ins;
-        // RTSIIOInterfaceAPI* ins = static_cast<RTSIIOInterfaceAPI *>(instance);
+        RTSIIOInterfaceAPI* instance =  static_cast<RTSIIOInterfaceAPI *>((*createRTSIIOInstance)(hostip, verbose, false));
         instance->setStandardDigitalOut(2,true);
 
         if ((error = dlerror()) != NULL)

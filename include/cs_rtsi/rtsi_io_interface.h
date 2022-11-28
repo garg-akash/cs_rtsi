@@ -54,12 +54,12 @@ class RTSIIOInterface : public RTSIIOInterfaceAPI
  	std::shared_ptr<RTSI> rtsi_;
 };
 
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-// void* createRTSIIOInstance(std::string hostip, bool verbose, bool use_upper_range_registers);
+void* createRTSIIOInstance(std::string hostip, bool verbose, bool use_upper_range_registers);
 
-// #ifdef __cplusplus 
-// }
-// #endif
+#ifdef __cplusplus 
+}
+#endif

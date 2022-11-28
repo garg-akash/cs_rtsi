@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cs_rtsi/rtsi_receive_interface_api.h>
 #include <cs_rtsi/rtsi.h>
 #include <cs_rtsi/robot_state.h>
 
@@ -11,146 +12,146 @@
 #include <map>
 #include <boost/thread/thread.hpp>
 
-class RTSIReceiveInterface
+class RTSIReceiveInterface : public RTSIReceiveInterfaceAPI
 {
  public:
 	RTSIReceiveInterface(std::string hostip, double frequency = -1.0,
-                         std::vector<std::string> variables = {},
-                         bool verbose = false);
+                       std::vector<std::string> variables = {},
+                       bool verbose = false);
 
 	virtual ~RTSIReceiveInterface();
 
-    void disconnect();
+  void disconnect();
 
 	bool setupOutputRecipes(const double& frequency);
 
-    template <typename T>
-    bool isWithinBounds(const T& value, const T& low, const T& high)
-    {
-      return (low <= value && value <= high);
-    }
+  template <typename T>
+  bool isWithinBounds(const T& value, const T& low, const T& high)
+  {
+    return (low <= value && value <= high);
+  }
 
-    void receiveCallback();
+  void receiveCallback();
 
-    double getPayloadMass();
+  double getPayloadMass();
 
-    std::vector<double> getPayloadCog();
+  std::vector<double> getPayloadCog();
 
-    std::uint32_t getScriptControlLine();
+  std::uint32_t getScriptControlLine();
 
-    double getTimestamp();
+  double getTimestamp();
 
-    std::vector<double> getTargetJointPositions();
+  std::vector<double> getTargetJointPositions();
 
-    std::vector<double> getTargetJointSpeeds();
+  std::vector<double> getTargetJointSpeeds();
 
-    std::vector<double> getActualJointTorques();
-    
-    std::vector<double> getActualJointPositions();
+  std::vector<double> getActualJointTorques();
+  
+  std::vector<double> getActualJointPositions();
 
-    std::vector<double> getActualJointSpeeds();
+  std::vector<double> getActualJointSpeeds();
 
-    std::vector<double> getActualJointCurrent();
-    
-    std::vector<double> getActualTCPPose();
+  std::vector<double> getActualJointCurrent();
+  
+  std::vector<double> getActualTCPPose();
 
-    std::vector<double> getActualTCPSpeed();
+  std::vector<double> getActualTCPSpeed();
 
-    std::vector<double> getTargetTCPPose();
+  std::vector<double> getTargetTCPPose();
 
-    std::vector<double> getTargetTCPSpeed();
+  std::vector<double> getTargetTCPSpeed();
 
-    std::uint32_t getActualDigitalInputBits();
+  std::uint32_t getActualDigitalInputBits();
 
-    std::vector<double> getJointTemperatures();
+  std::vector<double> getJointTemperatures();
 
-    std::int32_t getRobotMode();
+  std::int32_t getRobotMode();
 
-    std::vector<std::int32_t> getJointMode();
+  std::vector<std::int32_t> getJointMode();
 
-    std::int32_t getSafetyMode();
+  std::int32_t getSafetyMode();
 
-    std::int32_t getSafetyStatus();
+  std::int32_t getSafetyStatus();
 
-    double getSpeedScaling();
+  double getSpeedScaling();
 
-    double getTargetSpeedFraction();
+  double getTargetSpeedFraction();
 
-    double getActualRobotVoltage();
+  double getActualRobotVoltage();
 
-    double getActualRobotCurrent();
+  double getActualRobotCurrent();
 
-    std::vector<double> getActualJointVoltage();
+  std::vector<double> getActualJointVoltage();
 
-    std::uint32_t getActualDigitalOutputBits();
+  std::uint32_t getActualDigitalOutputBits();
 
-    std::uint32_t getRuntimeState();
+  std::uint32_t getRuntimeState();
 
-    std::vector<double> getElbowPosition();
+  std::vector<double> getElbowPosition();
 
-    std::uint32_t getRobotStatusBits();
+  std::uint32_t getRobotStatusBits();
 
-    std::uint32_t getSafetyStatusBits();
+  std::uint32_t getSafetyStatusBits();
 
-    std::uint32_t getAnalogIOTypes();
+  std::uint32_t getAnalogIOTypes();
 
-    double getStandardAnalogInput0();
+  double getStandardAnalogInput0();
 
-    double getStandardAnalogInput1();
+  double getStandardAnalogInput1();
 
-    double getStandardAnalogOutput0();
+  double getStandardAnalogOutput0();
 
-    double getStandardAnalogOutput1();
+  double getStandardAnalogOutput1();
 
-    double getIOCurrent();
+  double getIOCurrent();
 
-    std::uint32_t getToolMode();
+  std::uint32_t getToolMode();
 
-    std::uint32_t getToolAnalogInputTypes();
+  std::uint32_t getToolAnalogInputTypes();
 
-    std::uint32_t getToolAnalogOutputTypes();
+  std::uint32_t getToolAnalogOutputTypes();
 
-    double getToolAnalogInput();
+  double getToolAnalogInput();
 
-    double getToolAnalogOutput();
+  double getToolAnalogOutput();
 
-    double getToolOutputVoltage();
+  double getToolOutputVoltage();
 
-    double getToolOutputCurrent();
+  double getToolOutputCurrent();
 
-    double getToolTemperature();
+  double getToolTemperature();
 
-    std::uint32_t getOutputBitRegisters0to31();
+  std::uint32_t getOutputBitRegisters0to31();
 
-    std::uint32_t getOutputBitRegisters32to63();
+  std::uint32_t getOutputBitRegisters32to63();
 
-    std::uint8_t getToolDigitalMode();
+  std::uint8_t getToolDigitalMode();
 
-    std::uint8_t getToolDigital0Mode();
+  std::uint8_t getToolDigital0Mode();
 
-    std::uint8_t getToolDigital1Mode();
+  std::uint8_t getToolDigital1Mode();
 
-    std::uint8_t getToolDigital2Mode();
+  std::uint8_t getToolDigital2Mode();
 
-    std::uint8_t getToolDigital3Mode();
+  std::uint8_t getToolDigital3Mode();
 
-    std::uint32_t getInputBitRegisters0to31();
+  std::uint32_t getInputBitRegisters0to31();
 
-    std::uint32_t getInputBitRegisters32to63();
+  std::uint32_t getInputBitRegisters32to63();
 
-    bool getOutputBitRegister(int output_id);
+  bool getOutputBitRegister(int output_id);
 
-    std::int32_t getOutputIntRegister(int output_id);
+  std::int32_t getOutputIntRegister(int output_id);
 
-    double getOutputDoubleRegister(int output_id);
+  double getOutputDoubleRegister(int output_id);
 
-    bool getInputBitRegister(int input_id);
+  bool getInputBitRegister(int input_id);
 
-    std::int32_t getInputIntRegister(int input_id);
+  std::int32_t getInputIntRegister(int input_id);
 
-    double getInputDoubleRegister(int input_id);
+  double getInputDoubleRegister(int input_id);
 
-    std::shared_ptr<RobotState> robot_state_;
+  std::shared_ptr<RobotState> robot_state_;
 
  private:
  	std::string hostip_;
@@ -160,7 +161,17 @@ class RTSIReceiveInterface
  	bool verbose_;
  	double delta_time_;
  	std::shared_ptr<RTSI> rtsi_;
-    std::atomic<bool> stop_receive_thread{false};
-    std::shared_ptr<boost::thread> th_;
-    size_t no_bytes_avail_cnt_;
+  std::atomic<bool> stop_receive_thread{false};
+  std::shared_ptr<boost::thread> th_;
+  size_t no_bytes_avail_cnt_;
 };
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void* createRTSIReceiveInstance(std::string hostip, double frequency, std::vector<std::string> variables, bool verbose);
+
+#ifdef __cplusplus 
+}
+#endif

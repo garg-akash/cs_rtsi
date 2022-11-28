@@ -1,3 +1,9 @@
+/*
+Author: Elite_akashgarg
+CreateDate: 2022-11-28
+LastEdited: 2022-11-28
+Description: example script to test RTSI_IO_INTERFACE plugin
+*/
 #include <dlfcn.h>
 #include <dirent.h>
 #include <string>
@@ -5,9 +11,13 @@
 #include <stdlib.h>
 #include <iostream>
 #include <cs_rtsi/rtsi_io_interface_api.h>
+#include <cs_rtsi/rtsi_receive_interface_api.h>
 
 const std::string hostip = "192.168.133.129";
+const std::string lib_path = "/home/ak/ur_client/cs_rtsi/build/pluginScript/";
 const bool verbose = true;
+double frequency = 100;
+
 std::string extension(char* f)
 {
   std::string file_name(f);
@@ -37,7 +47,7 @@ class PlugInObject
         fname = path + fname;
         std::cout << "File Name : " << fname << "\n"; 
         handle = dlopen(fname.c_str(), RTLD_LAZY);
-        std::cout << "Handle : " << handle << "\n";
+        // std::cout << "Handle : " << handle << "\n";
         if (!handle || ((error = dlerror()) != NULL))
         {
           std::cerr << error << "\n";
@@ -45,12 +55,20 @@ class PlugInObject
         }
 
         dlerror();
-        // std::cout << "Sym : " << dlsym(handle, "createRTSIIOInstance") << "\n";
 
         void* (*createRTSIIOInstance)(std::string, bool, bool);
         createRTSIIOInstance = (void* (*)(std::string, bool, bool))dlsym(handle, "createRTSIIOInstance");
-        RTSIIOInterfaceAPI* instance =  static_cast<RTSIIOInterfaceAPI *>((*createRTSIIOInstance)(hostip, verbose, false));
-        instance->setStandardDigitalOut(2,true);
+        RTSIIOInterfaceAPI* instance_io =  static_cast<RTSIIOInterfaceAPI *>((*createRTSIIOInstance)(hostip, verbose, false));
+        instance_io->setStandardDigitalOut(2,true);
+
+        void* (*createRTSIReceiveInstance)(std::string, double, std::vector<std::string>, bool);
+        createRTSIReceiveInstance = (void* (*)(std::string, double, std::vector<std::string>, bool))dlsym(handle, "createRTSIReceiveInstance");
+        // std::cout << "Sym : " << createRTSIReceiveInstance << "\n";
+        RTSIReceiveInterfaceAPI* instance_receive =  static_cast<RTSIReceiveInterfaceAPI *>((*createRTSIReceiveInstance)(hostip, frequency, {}, verbose));
+        std::vector<double> jp = instance_receive->getActualJointPositions();
+        std::cout << "Joint positions : \n";
+        for(auto j : jp)
+          std::cout << j << "\n";
 
         if ((error = dlerror()) != NULL)
         {
@@ -68,6 +86,6 @@ int main(int argc, char const *argv[])
 {
   std::cout << "Program started...\n";
   PlugInObject obj;
-  obj.LoadSharedLib("/home/ak/ur_client/cs_rtsi/build/src/");
+  obj.LoadSharedLib(lib_path.c_str ());
   return 0;
 }

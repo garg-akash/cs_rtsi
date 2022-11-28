@@ -25,67 +25,15 @@ public:
 	  enum Type
 	  {
 	    NO_CMD = 0,
-	    // MOVEJ = 1,
-	    // MOVEJ_IK = 2,
-	    // MOVEL = 3,
-	    // MOVEL_FK = 4,
-	    // FORCE_MODE = 6,
-	    // FORCE_MODE_STOP = 7,
-	    // ZERO_FT_SENSOR = 8,
-	    // SPEEDJ = 9,
-	    // SPEEDL = 10,
-	    // SERVOJ = 11,
-	    // SERVOC = 12,
 	    SET_STD_DIGITAL_OUT = 13,
-	    // SET_TOOL_DIGITAL_OUT = 14,
-	    // SPEED_STOP = 15,
-	    // SERVO_STOP = 16,
-	    // SET_PAYLOAD = 17,
-	    // TEACH_MODE = 18,
-	    // END_TEACH_MODE = 19,
-	    // FORCE_MODE_SET_DAMPING = 20,
-	    // FORCE_MODE_SET_GAIN_SCALING = 21,
 	    SET_SPEED_SLIDER = 22,
 	    SET_STD_ANALOG_OUT = 23,
-	    // SERVOL = 24,
-	    // TOOL_CONTACT = 25,
-	    // GET_STEPTIME = 26,
-	    // GET_ACTUAL_JOINT_POSITIONS_HISTORY = 27,
-	    // GET_TARGET_WAYPOINT = 28,
-	    // SET_TCP = 29,
-	    // GET_INVERSE_KINEMATICS_ARGS = 30,
-	    // PROTECTIVE_STOP = 31,
-	    // STOPL = 33,
-	    // STOPJ = 34,
-	    // SET_WATCHDOG = 35,
-	    // IS_POSE_WITHIN_SAFETY_LIMITS = 36,
-	    // IS_JOINTS_WITHIN_SAFETY_LIMITS = 37,
-	    // GET_JOINT_TORQUES = 38,
-	    // POSE_TRANS = 39,
-	    // GET_TCP_OFFSET = 40,
-	    // JOG_START = 41,
-	    // JOG_STOP = 42,
-	    // GET_FORWARD_KINEMATICS_DEFAULT = 43,
-	    // GET_FORWARD_KINEMATICS_ARGS = 44,
-	    // MOVE_PATH = 45,
-	    // GET_INVERSE_KINEMATICS_DEFAULT = 46,
-	    // IS_STEADY = 47,
 	    SET_CONF_DIGITAL_OUT = 48,
 	    SET_INPUT_INT_REGISTER = 49,
 	    SET_INPUT_DOUBLE_REGISTER = 50,
       SET_INPUT_BIT_REGISTER_X_TO_Y = 81,
       SET_INPUT_BIT_REGISTER = 82,
-	    // MOVE_UNTIL_CONTACT = 51,
-	    // FREEDRIVE_MODE = 52,
-	    // END_FREEDRIVE_MODE = 53,
-	    // GET_FREEDRIVE_STATUS = 54,
-	    // SET_EXTERNAL_FORCE_TORQUE = 55,
-	    // FT_RTSI_INPUT_ENABLE = 56,
-	    // ENABLE_EXTERNAL_FT_SENSOR = 57,
-	    // GET_ACTUAL_TOOL_FLANGE_POSE = 58,
-	    // SET_GRAVITY = 59,
 	    WATCHDOG = 99,
-	    // STOP_SCRIPT = 255
 	  };
 
 	  enum Recipe
@@ -117,29 +65,21 @@ public:
 
 	  Type type_;// = NO_CMD;
 	  std::uint8_t recipe_id_;
-	  // std::int32_t async_;
-	  // std::int32_t ft_rtsi_input_enable_;
 	  std::int32_t reg_int_val_;
 	  double reg_double_val_;
     std::uint32_t reg_bit_val_x_to_y_;
     bool reg_bit_val_;
 	  std::vector<double> val_;
-	  // std::vector<int> selection_vector_;
-	  // std::vector<int> free_axes_;
-	  // std::int32_t force_mode_type_;
 	  std::uint16_t std_digital_out_;
 	  std::uint16_t std_digital_out_mask_;
 	  std::uint8_t configurable_digital_out_;
 	  std::uint8_t configurable_digital_out_mask_;
-	  // std::uint8_t std_tool_out_;
-	  // std::uint8_t std_tool_out_mask_;
 	  std::uint8_t std_analog_output_mask_;
 	  std::uint8_t std_analog_output_type_;
 	  double std_analog_output_0_;
 	  double std_analog_output_1_;
 	  std::int32_t speed_slider_mask_;
 	  double speed_slider_fraction_;
-	  // std::uint32_t steps_;
 	};
 
 	enum RTSICommand

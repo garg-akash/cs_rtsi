@@ -1,7 +1,7 @@
 /*
 Author: Elite_akashgarg
 CreateDate: 2022-11-09
-LastEdited: 2022-11-22
+LastEdited: 2022-11-28
 Description: handles rtsi output subscription
 */
 #include <cs_rtsi/robot_state.h>
@@ -1079,4 +1079,14 @@ double RTSIReceiveInterface::getInputDoubleRegister(int input_id)
     return input_double_register_val;
   else
     throw std::runtime_error("unable to get state data for "+input_double_register_key);
+}
+
+void* createRTSIReceiveInstance(std::string hostip, double frequency, std::vector<std::string> variables, bool verbose)
+{
+  static RTSIReceiveInterfaceAPI* rtsi_receive = nullptr;
+  if(rtsi_receive == nullptr)
+  {
+    rtsi_receive = new RTSIReceiveInterface(hostip, frequency, variables, verbose);
+  }
+  return rtsi_receive;
 }

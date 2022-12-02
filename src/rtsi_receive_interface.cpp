@@ -1,7 +1,7 @@
 /*
 Author: Elite_akashgarg
 CreateDate: 2022-11-09
-LastEdited: 2022-11-28
+LastEdited: 2022-12-02
 Description: handles rtsi output subscription
 */
 #include <cs_rtsi/robot_state.h>
@@ -49,6 +49,11 @@ RTSIReceiveInterface::RTSIReceiveInterface(std::string hotsip, double frequency,
 RTSIReceiveInterface::~RTSIReceiveInterface()
 {
 	disconnect();
+}
+
+std::string RTSIReceiveInterface::getUniqueName()
+{
+  return "ELITE ROBOT RTSI_RECEIVE_INTERFACE";
 }
 
 void RTSIReceiveInterface::disconnect()

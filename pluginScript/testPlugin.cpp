@@ -1,7 +1,7 @@
 /*
 Author: Elite_akashgarg
 CreateDate: 2022-11-28
-LastEdited: 2022-11-28
+LastEdited: 2022-12-02
 Description: example script to test Plugin Managaer
 */
 #include <string>
@@ -11,7 +11,7 @@ Description: example script to test Plugin Managaer
 #include <PluginManager.h>
 
 const std::string hostip = "192.168.133.129";
-const std::string lib_path = "/home/ak/ur_client/cs_rtsi/build/pluginScript/";
+const std::string lib_path = "/home/ak/ur_client/cs_rtsi/build/src/";
 const std::string plugin_name = "liblibRTSI";
 const bool verbose = true;
 double frequency = 100;
@@ -19,27 +19,39 @@ double frequency = 100;
 int main(int argc, char const *argv[])
 {
   std::cout << "Program started...\n";
+
   PluginManager obj;
+  obj.setHostIP(hostip);
+  obj.setVerbose(verbose);
+  obj.setFrequency(frequency);
   obj.setPluginDirectory(lib_path);
   obj.setPluginName(plugin_name);
   auto handle = obj.loadPlugin();
-  if(!handle)
-  {
-    std::cerr << "Handle not found\n";
-    return 1;
-  }
-  void* (*createRTSIIOInstance)(std::string, bool, bool);
-  createRTSIIOInstance = (void* (*)(std::string, bool, bool))dlsym(handle, "createRTSIIOInstance");
-  RTSIIOInterfaceAPI* instance_io =  static_cast<RTSIIOInterfaceAPI *>((*createRTSIIOInstance)(hostip, verbose, false));
-  instance_io->setStandardDigitalOut(2,true);
 
-  void* (*createRTSIReceiveInstance)(std::string, double, std::vector<std::string>, bool);
-  createRTSIReceiveInstance = (void* (*)(std::string, double, std::vector<std::string>, bool))dlsym(handle, "createRTSIReceiveInstance");
-  // std::cout << "Sym : " << createRTSIReceiveInstance << "\n";
-  RTSIReceiveInterfaceAPI* instance_receive =  static_cast<RTSIReceiveInterfaceAPI *>((*createRTSIReceiveInstance)(hostip, frequency, {}, verbose));
-  std::vector<double> jp = instance_receive->getActualJointPositions();
+  if (!handle)
+  {
+    std::cerr << "Handle to the requested library not found\n";
+    throw std::exception();
+  }
+
+  if (!obj.setIoInterfaceName("ELITE ROBOT RTSI_IO_INTERFACE"))
+  {
+    std::cerr << "The requested IO Interface is not found!\n";
+    throw std::exception();
+  }
+
+  obj.getCurrentRTSIIOAPI()->setStandardDigitalOut(2,true);
+  
+  if (!obj.setReceiveInterfaceName("ELITE ROBOT RTSI_RECEIVE_INTERFACE"))
+  {
+    std::cerr << "The requested Receive Interface is not found!\n";
+    throw std::exception();
+  }
+
+  std::vector<double> jp = obj.getCurrentRTSIReceiveAPI()->getActualJointPositions();
   std::cout << "Joint positions : \n";
   for(auto j : jp)
     std::cout << j << "\n";
+
   return 0;
 }

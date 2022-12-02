@@ -11,7 +11,7 @@ class RTSIIOInterface : public RTSIIOInterfaceAPI
 
 	virtual ~RTSIIOInterface();
 
-  std::string getPluginName();
+  std::string getUniqueName();
 
   void disconnect();
 

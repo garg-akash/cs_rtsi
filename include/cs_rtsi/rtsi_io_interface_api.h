@@ -26,7 +26,7 @@ extern "C" {
 
     // virtual void setUseUpperRangeRegisters(bool use_upper_range_registers) = 0;
 
-    virtual std::string getPluginName() = 0;
+    virtual std::string getUniqueName() = 0;
 
     virtual bool setSpeedSlider(double fraction) = 0;
 

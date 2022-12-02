@@ -1,7 +1,7 @@
 /*
 Author: Elite_akashgarg
 CreateDate: 2022-11-09
-LastEdited: 2022-11-22
+LastEdited: 2022-12-02
 Description: handles rtsi input subscription
 */
 #include <cs_rtsi/rtsi.h>
@@ -38,7 +38,7 @@ RTSIIOInterface::~RTSIIOInterface()
       rtsi_->disconnect();
 }
 
-std::string RTSIIOInterface::getPluginName()
+std::string RTSIIOInterface::getUniqueName()
 {
   return "ELITE ROBOT RTSI_IO_INTERFACE";
 }

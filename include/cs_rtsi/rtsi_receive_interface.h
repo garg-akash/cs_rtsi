@@ -21,6 +21,8 @@ class RTSIReceiveInterface : public RTSIReceiveInterfaceAPI
 
 	virtual ~RTSIReceiveInterface();
 
+  std::string getUniqueName();
+  
   void disconnect();
 
 	bool setupOutputRecipes(const double& frequency);

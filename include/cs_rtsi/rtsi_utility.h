@@ -27,14 +27,14 @@ class RTSIUtility
   {
   	double output;
 
-  	((char *)(&output))[0] = data[message_offset];
-  	((char *)(&output))[1] = data[message_offset + 1];
-  	((char *)(&output))[2] = data[message_offset + 2];
-  	((char *)(&output))[3] = data[message_offset + 3];
-  	((char *)(&output))[4] = data[message_offset + 4];
-  	((char *)(&output))[5] = data[message_offset + 5];
-  	((char *)(&output))[6] = data[message_offset + 6];
-  	((char *)(&output))[7] = data[message_offset + 7];
+    ((char *)(&output))[7] = data[message_offset];
+    ((char *)(&output))[6] = data[message_offset + 1];
+    ((char *)(&output))[5] = data[message_offset + 2];
+    ((char *)(&output))[4] = data[message_offset + 3];
+    ((char *)(&output))[3] = data[message_offset + 4];
+    ((char *)(&output))[2] = data[message_offset + 5];
+    ((char *)(&output))[1] = data[message_offset + 6];
+    ((char *)(&output))[0] = data[message_offset + 7];
   
   	message_offset += 8;
   	return output;
@@ -86,7 +86,7 @@ class RTSIUtility
 	static inline uint16_t getUInt16(const std::vector<char> &data, uint32_t &message_offset)
 	{
 		uint16_t output = 0;
-		((char *)(&output))[1] = data[message_offset + 0];
+		((char *)(&output))[1] = data[message_offset];
 		((char *)(&output))[0] = data[message_offset + 1];
 		message_offset += 2;
 
@@ -96,7 +96,7 @@ class RTSIUtility
   static inline uint16_t getUInt16(const std::vector<unsigned char> &data, uint32_t &message_offset)
   {
     uint16_t output = 0;
-    ((char *)(&output))[1] = data[message_offset + 0];
+    ((char *)(&output))[1] = data[message_offset];
     ((char *)(&output))[0] = data[message_offset + 1];
     message_offset += 2;
 
@@ -106,10 +106,10 @@ class RTSIUtility
 	static inline uint32_t getUInt32(const std::vector<char> &data, uint32_t &message_offset)
   {
     uint32_t output = 0;
-    ((char *)(&output))[0] = data[message_offset];
-    ((char *)(&output))[1] = data[message_offset + 1];
-    ((char *)(&output))[2] = data[message_offset + 2];
-    ((char *)(&output))[3] = data[message_offset + 3];
+    ((char *)(&output))[3] = data[message_offset];
+    ((char *)(&output))[2] = data[message_offset + 1];
+    ((char *)(&output))[1] = data[message_offset + 2];
+    ((char *)(&output))[0] = data[message_offset + 3];
     message_offset += 4;
 
     return output;
@@ -119,14 +119,14 @@ class RTSIUtility
   {
     uint64_t output;
 
-    ((char *)(&output))[0] = data[message_offset];
-    ((char *)(&output))[1] = data[message_offset + 1];
-    ((char *)(&output))[2] = data[message_offset + 2];
-    ((char *)(&output))[3] = data[message_offset + 3];
-    ((char *)(&output))[4] = data[message_offset + 4];
-    ((char *)(&output))[5] = data[message_offset + 5];
-    ((char *)(&output))[6] = data[message_offset + 6];
-    ((char *)(&output))[7] = data[message_offset + 7];
+    ((char *)(&output))[7] = data[message_offset];
+    ((char *)(&output))[6] = data[message_offset + 1];
+    ((char *)(&output))[5] = data[message_offset + 2];
+    ((char *)(&output))[4] = data[message_offset + 3];
+    ((char *)(&output))[3] = data[message_offset + 4];
+    ((char *)(&output))[2] = data[message_offset + 5];
+    ((char *)(&output))[1] = data[message_offset + 6];
+    ((char *)(&output))[0] = data[message_offset + 7];
 
     message_offset += 8;
     return output;
@@ -135,10 +135,10 @@ class RTSIUtility
   static inline int32_t getInt32(const std::vector<char> &data, uint32_t &message_offset)
   {
     int32_t output = 0;
-    ((char *)(&output))[0] = data[message_offset];
-    ((char *)(&output))[1] = data[message_offset + 1];
-    ((char *)(&output))[2] = data[message_offset + 2];
-    ((char *)(&output))[3] = data[message_offset + 3];
+    ((char *)(&output))[3] = data[message_offset];
+    ((char *)(&output))[2] = data[message_offset + 1];
+    ((char *)(&output))[1] = data[message_offset + 2];
+    ((char *)(&output))[0] = data[message_offset + 3];
     message_offset += 4;
     return output;
   }
@@ -205,28 +205,28 @@ class RTSIUtility
   static inline std::vector<char> packUInt16(uint16_t uint16)
   {
     std::vector<char> result;
-    result.push_back(uint16); // Tested OK
-    result.push_back(uint16 >> 8);
+    result.push_back(uint16 >> 8); // Tested OK
+    result.push_back(uint16);
     return result;
   }
 
   static inline std::vector<char> packUInt32(uint32_t uint32)
   {
     std::vector<char> result;
-    result.push_back(uint32); // Tested OK
-    result.push_back(uint32 >> 8);
+    result.push_back(uint32 >> 24); // Tested OK
     result.push_back(uint32 >> 16);
-    result.push_back(uint32 >> 24);
+    result.push_back(uint32 >> 8);
+    result.push_back(uint32);
     return result;
   }
 
   static inline std::vector<char> packInt32(int32_t int32)
   {
     std::vector<char> result;
-    result.push_back(int32);  // Tested OK
-    result.push_back(int32 >> 8);
+    result.push_back(int32 >> 24);  // Tested OK
     result.push_back(int32 >> 16);
-    result.push_back(int32 >> 24);
+    result.push_back(int32 >> 8);
+    result.push_back(int32);
     return result;
   }
 
@@ -280,10 +280,19 @@ class RTSIUtility
     {
       double value;
       char c[8];
-    } in{};
+    } in{}, out{};
+
     in.value = d;
-    
-    for (auto const &character : in.c)  // Tested OK
+    out.c[0] = in.c[7];
+    out.c[1] = in.c[6];
+    out.c[2] = in.c[5];
+    out.c[3] = in.c[4];
+    out.c[4] = in.c[3];
+    out.c[5] = in.c[2];
+    out.c[6] = in.c[1];
+    out.c[7] = in.c[0];
+
+    for (auto const &character : out.c)  // Tested OK
       output.push_back(character);
     
     return output;

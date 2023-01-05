@@ -3,7 +3,7 @@ project(cs_client_rtsi)
 
 find_package(Boost REQUIRED COMPONENTS system thread program_options)
 find_package(Threads)
-add_subdirectory(src pluginScript)
+add_subdirectory(src)
 find_package(jsoncpp REQUIRED)
 
 add_executable(connect_test examples/connect_test.cpp)

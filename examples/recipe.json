@@ -1,12 +1,14 @@
 {
 	"output" : [
 			"timestamp",
+			"target_speed_fraction",
 			"actual_joint_positions",
-			"actual_TCP_pose",
+			"target_joint_speeds",
 			"payload_cog",
 			"robot_mode",
-			"input_bit_registers0_to_31",
+			"input_bit_register65",
 			"tool_analog_input_types",
+			"input_int_register47",
 			"input_double_register19"],
 
 	"input" : [
@@ -29,8 +31,8 @@
 			{"subs" : "input_bit_registers32_to_64",
 			 "value" : 8},
 			{"subs" : "input_bit_registerX",
-			 "number" : 120,
-			 "value" : false},
+			 "number" : 65,
+			 "value" : true},
 			{"subs" : "input_int_registerX",
 			 "number" : 47,
 			 "value" : 22},

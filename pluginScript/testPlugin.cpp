@@ -12,7 +12,7 @@ Description: example script to test Plugin Managaer
 
 const std::string hostip = "192.168.133.129";
 const std::string lib_path = "/home/ak/ur_client/cs_rtsi/build/src/";
-const std::string plugin_name = "liblibRTSI";
+const std::string plugin_name = "libcsrtsi";
 const bool verbose = true;
 double frequency = 100;
 

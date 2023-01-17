@@ -34,6 +34,7 @@ public:
       SET_INPUT_BIT_REGISTER_X_TO_Y = 81,
       SET_INPUT_BIT_REGISTER = 82,
 	    WATCHDOG = 99,
+      SET_EXTERNAL_FORCE_TORQUE = 96
 	  };
 
 	  enum Recipe

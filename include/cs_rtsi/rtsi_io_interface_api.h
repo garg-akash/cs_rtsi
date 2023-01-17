@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #ifdef WIN32 // declared when compiling with windows
   #ifdef API_EXPORT // must be declared in Preprocessor Definitions
@@ -48,6 +49,7 @@ extern "C" {
 
     virtual bool setInputBitRegister(int input_id, bool value) = 0;
 
+    virtual bool setExternalForceTorque(const std::vector<double> &value) = 0;
   };
 
 #ifdef __cplusplus 

@@ -100,6 +100,10 @@ bool RTSIIOInterface::setupInputRecipes()
     std::vector<std::string> set_input_bit_reg_input = {inBitReg(i)};
     rtsi_->sendInputSetup(set_input_bit_reg_input);
   }
+
+  // Recipe 167
+  std::vector<std::string> set_ext_force_torque = {"external_force_torque"};
+  rtsi_->sendInputSetup(set_ext_force_torque);
   
   return true;
 }
@@ -244,6 +248,15 @@ bool RTSIIOInterface::setInputBitRegister(int input_id, bool value)
         std::to_string(input_id));
 
   robot_cmd.reg_bit_val_ = value;
+  return sendCommand(robot_cmd);
+}
+
+bool RTSIIOInterface::setExternalForceTorque(const std::vector<double> &value)
+{
+  RTSI::RobotCommand robot_cmd;
+  robot_cmd.type_ = RTSI::RobotCommand::Type::SET_EXTERNAL_FORCE_TORQUE;
+  robot_cmd.recipe_id_ = 167;
+  robot_cmd.val_ = value;
   return sendCommand(robot_cmd);
 }
 

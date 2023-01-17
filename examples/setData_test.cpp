@@ -11,6 +11,7 @@ Description: example script to test input subscription
 #include <fstream>
 
 const std::string hostip = "192.168.133.129";
+// const std::string hostip = "192.168.51.5";
 const std::string recipe_file = "../examples/recipe.json";
 
 int main(int argc, char const *argv[])
@@ -52,7 +53,7 @@ int main(int argc, char const *argv[])
     else if(i["subs"].asString() == "input_bit_registers0_to_31")
       rtsi_io.setInputBitRegisters0to31(i["value"].asInt());
 
-    else if(i["subs"].asString() == "input_bit_registers32_to_64")
+    else if(i["subs"].asString() == "input_bit_registers32_to_63")
       rtsi_io.setInputBitRegisters32to63(i["value"].asInt());
 
     else if(i["subs"].asString() == "input_bit_registerX")
@@ -63,6 +64,14 @@ int main(int argc, char const *argv[])
 
     else if(i["subs"].asString() == "input_double_registerX")
       rtsi_io.setInputDoubleRegister(i["number"].asInt(), i["value"].asDouble());
+
+    else if(i["subs"].asString() == "external_force_torque")
+    {
+      std::vector<double> val;
+      for(auto v : i["value"])
+        val.push_back(v.asDouble());
+      rtsi_io.setExternalForceTorque(val);
+    }
 
     else
       throw std::runtime_error("Invalid input subscription requested : " + i["subs"].asString());

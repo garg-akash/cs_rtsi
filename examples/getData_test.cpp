@@ -19,6 +19,7 @@ using rtsi_type_variant_ = boost::variant<bool, uint8_t, uint32_t, uint64_t, int
     											 std::vector<int32_t>>;
 
 const std::string hostip = "192.168.133.129";
+// const std::string hostip = "192.168.51.5";
 const std::string recipe_file = "../examples/recipe.json";
 
 int main(int argc, char const *argv[])

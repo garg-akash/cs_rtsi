@@ -44,6 +44,8 @@ class RTSIIOInterface : public RTSIIOInterfaceAPI
   bool setInputBitRegisters32to63(std::uint32_t value);
 
   bool setInputBitRegister(int input_id, bool value);
+
+  bool setExternalForceTorque(const std::vector<double> &value);
  
  private:
  	std::string hostip_;

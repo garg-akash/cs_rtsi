@@ -9,16 +9,18 @@
 			"input_bit_register65",
 			"tool_analog_input_types",
 			"input_int_register47",
-			"input_double_register19"],
+			"input_double_register19",
+			"input_bit_registers0_to_31",
+			"input_bit_registers32_to_63"],
 
 	"input" : [
 			{"subs" : "speed_slider_fraction",
-			 "value" : 16.89},
+			 "value" : 0.7},
 			{"subs" : "standard_digital_output",
-			 "number" : 3,
+			 "number" : 12,
 			 "value" : true},
 			{"subs" : "configurable_digital_output",
-			 "number" : 5,
+			 "number" : 1,
 			 "value" : true},
 			{"subs" : "standard_analog_output_0",
 			 "type" : 1,
@@ -28,7 +30,7 @@
 			 "value" : 0.4},
 			{"subs" : "input_bit_registers0_to_31",
 			 "value" : 6},
-			{"subs" : "input_bit_registers32_to_64",
+			{"subs" : "input_bit_registers32_to_63",
 			 "value" : 8},
 			{"subs" : "input_bit_registerX",
 			 "number" : 65,
@@ -38,5 +40,7 @@
 			 "value" : 22},
 			{"subs" : "input_double_registerX",
 			 "number" : 19,
-			 "value" : 167.7895}]
+			 "value" : 168.7895},
+			{"subs" : "external_force_torque",
+			 "value" : [1,2,3,4,5,6]}]
 }

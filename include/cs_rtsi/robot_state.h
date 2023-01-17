@@ -31,34 +31,34 @@ class RobotState
 	template <typename T> bool
 	getStateData(const std::string& name, T& val)
 	{
-	    // for(auto i : state_data_)
-	    // 	std::cout << " state : " << i.first << "\n";
-	    std::lock_guard<std::mutex> lock(update_state_mutex_);
-	
-	    if (state_data_.find(name) != state_data_.end())
-	    {
-	     	val = boost::strict_get<T>(state_data_[name]);
-	    }
-	    else
-	    {
-	      	return false;
-	    }
-	    return true;
+    // for(auto i : state_data_)
+    // 	std::cout << " state : " << i.first << "\n";
+    std::lock_guard<std::mutex> lock(update_state_mutex_);
+
+    if (state_data_.find(name) != state_data_.end())
+    {
+     	val = boost::strict_get<T>(state_data_[name]);
+    }
+    else
+    {
+      	return false;
+    }
+    return true;
 	};
 
 	template <typename T>
-  	bool setStateData(const std::string& name, T& val)
+	bool setStateData(const std::string& name, T& val)
+	{
+  	if (state_data_.find(name) != state_data_.end())
   	{
-    	if (state_data_.find(name) != state_data_.end())
-    	{
-      		state_data_[name] = val;
-    	}
-    	else
-    	{
-      		return false;
-    	}
-    	return true;
-  	};
+    		state_data_[name] = val;
+  	}
+  	else
+  	{
+    		return false;
+  	}
+  	return true;
+	};
 
  private:	
  	std::unordered_map<std::string, rtsi_type_variant_> state_data_;

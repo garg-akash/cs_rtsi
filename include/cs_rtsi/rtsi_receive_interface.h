@@ -15,7 +15,7 @@
 class RTSIReceiveInterface : public RTSIReceiveInterfaceAPI
 {
  public:
-	RTSIReceiveInterface(std::string hostip, double frequency = -1.0,
+	RTSIReceiveInterface(std::string hostip, double frequency = 250,
                        std::vector<std::string> variables = {},
                        bool verbose = false);
 

@@ -21,13 +21,13 @@ RTSIIOInterface::RTSIIOInterface(std::string hostip, bool verbose, bool use_uppe
 	}
 
 	port_ = 30004;
-	rtsi_ = std::make_shared<RTSI>(hostip_, port_, verbose_);
-  rtsi_->connect();
-  rtsi_->negotiateProtocolVersion();
+
+  rtsi_ = RTSI::getRTSIInstance(hostip_, port_, verbose_);
+
   register_offset_ = 0; //can be utilized for later functionality
 
   setupInputRecipes();
-  rtsi_->sendStart(); //TODO
+  rtsi_->sendStart();
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 

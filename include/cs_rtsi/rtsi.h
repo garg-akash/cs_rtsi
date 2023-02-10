@@ -119,6 +119,18 @@ public:
 	bool sendInputSetup(const std::vector<std::string> &input_names);
 	bool sendOutputSetup(const std::vector<std::string> &output_names, double frequency);
 
+  static std::shared_ptr<RTSI> getRTSIInstance(const std::string hostip, int port, bool verbose)
+  {
+    static std::shared_ptr<RTSI> rtsi_(nullptr);
+    if(rtsi_ == nullptr)
+    {
+      rtsi_ = std::make_shared<RTSI>(hostip, port, verbose);
+      rtsi_->connect();
+      rtsi_->negotiateProtocolVersion();
+    }
+    return rtsi_;
+  }
+
 private:
 	std::string hostip_;
 	int port_;

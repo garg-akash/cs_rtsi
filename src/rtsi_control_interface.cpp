@@ -18,15 +18,14 @@ RTSIControlInterface::RTSIControlInterface(std::string hostip, double frequency,
     verbose_(verbose)
 {
   register_offset_ = 0;
-  port_ = 3004;
-  rtsi_ = std::make_shared<RTSI>(hostip_, port_, verbose_);
-  rtsi_->connect();
-  rtsi_->negotiateProtocolVersion();
+  port_ = 30004;
+  rtsi_ = RTSI::getRTSIInstance(hostip_, port_, verbose_);
   if(frequency_ < 0)
     frequency_ = 250;
 
   setupRecipes(frequency_);
   robot_state_ = std::make_shared<RobotState>(state_names_);
+  rtsi_->sendStart();
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 

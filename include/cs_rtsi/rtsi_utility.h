@@ -4,6 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
+#include <chrono>
+
+#define SLACK_TIME_IN_MICROS 300UL
 
 struct RTSIControlHeader
 {
@@ -296,5 +299,36 @@ class RTSIUtility
       output.push_back(character);
     
     return output;
+  }
+
+  static timespec timepointToTimespec(std::chrono::time_point<std::chrono::steady_clock, std::chrono::nanoseconds> tp)
+  {
+    auto secs = std::chrono::time_point_cast<std::chrono::seconds>(tp);
+    auto ns = std::chrono::time_point_cast<std::chrono::nanoseconds>(tp) -
+              std::chrono::time_point_cast<std::chrono::nanoseconds>(secs);
+
+    return timespec{secs.time_since_epoch().count(), ns.count()};
+  }
+
+  static void waitFunction(const std::chrono::steady_clock::time_point& t_start, double delta_time)
+  {
+    auto t_stop = std::chrono::steady_clock::now();
+    auto t_duration = std::chrono::duration<double>(t_stop - t_start);
+    if(t_duration.count() < delta_time)
+    {
+      auto cycle_time_in_ms = static_cast<int64_t>(delta_time * 1000);
+      auto t_cycle_ideal_end = t_start + std::chrono::milliseconds(cycle_time_in_ms);
+      auto t_cycle_end_with_slack = t_cycle_ideal_end - (std::chrono::microseconds(SLACK_TIME_IN_MICROS) +
+                                                         t_duration);
+
+      struct timespec tv_cycle_end_with_slack{}, tv_cycle_end{}, curr{};
+      tv_cycle_end = timepointToTimespec(std::chrono::time_point_cast<std::chrono::nanoseconds>(t_cycle_ideal_end));
+      tv_cycle_end_with_slack = timepointToTimespec(std::chrono::time_point_cast<std::chrono::nanoseconds>(t_cycle_end_with_slack));
+      clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &tv_cycle_end_with_slack, NULL);
+
+      clock_gettime(CLOCK_MONOTONIC, &curr);
+      for(; curr.tv_nsec < tv_cycle_end.tv_nsec; clock_gettime(CLOCK_MONOTONIC, &curr))
+        ;
+    }
   }
 };

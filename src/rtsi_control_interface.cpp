@@ -9,7 +9,6 @@ Description: rtsi control interface implementation
 #include <cs_rtsi/robot_state.h>
 
 #include <string>
-#include <chrono>
 #include <thread>
 
 RTSIControlInterface::RTSIControlInterface(std::string hostip, double frequency, bool verbose)
@@ -22,7 +21,7 @@ RTSIControlInterface::RTSIControlInterface(std::string hostip, double frequency,
   rtsi_ = RTSI::getRTSIInstance(hostip_, port_, verbose_);
   if(frequency_ < 0)
     frequency_ = 250;
-
+  delta_time_ = 1 / frequency_;
   setupRecipes(frequency_);
   robot_state_ = std::make_shared<RobotState>(state_names_);
   rtsi_->sendStart();
@@ -84,4 +83,9 @@ bool RTSIControlInterface::sendCommand(const RTSI::RobotCommand &cmd)
     return true;
   }
   return true;
+}
+
+void RTSIControlInterface::waitFunction(const std::chrono::steady_clock::time_point& t_start)
+{
+  RTSIUtility::waitFunction(t_start, delta_time_);
 }

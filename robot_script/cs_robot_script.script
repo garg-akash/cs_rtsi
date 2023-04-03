@@ -1,0 +1,96 @@
+import threading
+
+global lock
+global thread_servoj_handle 
+global servoj_q
+global servoj_dt
+global servoj_lookahead_time
+global servoj_gain
+
+lock = threading.Lock()
+thread_servoj_handle = 0
+servoj_q = [0,0,0,0,0,0]
+servoj_dt = 0.004
+servoj_lookahead_time = 0.1
+servoj_gain = 300
+
+def thread_servoj():
+    while (True):
+        global servoj_q
+        global servoj_dt
+        global servoj_lookahead_time
+        global servoj_gain
+
+        lock.acquire()
+        q = servoj_q
+        dt = servoj_dt
+        lookahead_time = servoj_lookahead_time
+        gain = servoj_gain
+        lock.release()
+
+        servoj(q, dt, lookahead_time, gain)
+        #sync()
+    end
+end
+
+
+def read_cmd():
+    return read_input_integer_register(0)
+end
+
+def read_q_from_registers(index):
+    q = [0, 0, 0, 0, 0, 0]
+    for i in range(6):
+        q[i] = read_input_float_register(index + i)
+    end
+    return q
+end
+
+def process_cmd():
+    cmd == read_cmd()
+    if cmd == 11:
+    # servoj command
+        textmsg("executing servoj")
+        global servoj_q
+        global servoj_dt
+        global servoj_lookahead_time
+        global servoj_gain
+        
+        q = read_q_from_registers(0)
+
+        lock.acquire()
+        servoj_q = q
+        servoj_dt = read_input_float_register(6)
+        servoj_lookahead_time = read_input_float_register(7)
+        servoj_gain = read_input_float_register(8)
+        lock.release()
+
+        global thread_servoj_handle
+        if thread_servoj_handle == 0:
+            global thread_servoj_handle
+            thread_servoj_handle = start_thread(thread_servoj,())
+        end
+
+    elif cmd == 255:
+        textmsg("Received stop script!")
+    end
+
+    return cmd != 255
+end
+
+# MAIN_LOOP_BEGINS
+textmsg("CS RTSI Robot Script Started")
+main_running = True
+
+while main_running:
+    #print(main_running)
+    cmd = read_cmd()
+    print(cmd)
+    #if cmd == 11:
+    #    main_running = process_cmd()
+    #end
+    main_running = process_cmd()
+    sync()
+end
+textmsg("CS RTSI Robot Script Terminated")
+# MAIN_LOOP_ENDS

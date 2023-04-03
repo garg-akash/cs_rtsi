@@ -31,11 +31,11 @@ public:
 	    SET_CONF_DIGITAL_OUT = 48,
 	    SET_INPUT_INT_REGISTER = 49,
 	    SET_INPUT_DOUBLE_REGISTER = 50,
-      SET_INPUT_BIT_REGISTER_X_TO_Y = 81,
-      SET_INPUT_BIT_REGISTER = 82,
+      	SET_INPUT_BIT_REGISTER_X_TO_Y = 81,
+      	SET_INPUT_BIT_REGISTER = 82,
 	    WATCHDOG = 99,
-      SET_EXTERNAL_FORCE_TORQUE = 96,
-      SERVOJ = 11
+      	SET_EXTERNAL_FORCE_TORQUE = 96,
+      	SERVOJ = 11
 	  };
 
 	  enum Recipe
@@ -69,8 +69,8 @@ public:
 	  std::uint8_t recipe_id_;
 	  std::int32_t reg_int_val_;
 	  double reg_double_val_;
-    std::uint32_t reg_bit_val_x_to_y_;
-    bool reg_bit_val_;
+      std::uint32_t reg_bit_val_x_to_y_;
+      bool reg_bit_val_;
 	  std::vector<double> val_;
 	  std::uint16_t std_digital_out_;
 	  std::uint16_t std_digital_out_mask_;

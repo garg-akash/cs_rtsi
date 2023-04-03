@@ -224,6 +224,7 @@ void RTSI::send(const RobotCommand &robot_cmd)
 
   if (!robot_cmd.val_.empty())
   {
+    cmd_packed = RTSIUtility::packInt32(robot_cmd.type_);
     std::vector<char> vector_nd_packed = RTSIUtility::packVectorNd(robot_cmd.val_);
     cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(vector_nd_packed.begin()),
                       std::make_move_iterator(vector_nd_packed.end()));

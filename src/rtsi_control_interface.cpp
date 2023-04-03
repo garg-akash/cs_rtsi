@@ -41,13 +41,18 @@ bool RTSIControlInterface::setupRecipes(const double &frequency)
   rtsi_->sendOutputSetup(state_names_, frequency);
 
   // Recipe 1
-  std::vector<std::string> servoj_input = {inDoubleReg(0), inDoubleReg(1), inDoubleReg(2),
+  std::vector<std::string> servoj_input = {inIntReg(0), inDoubleReg(0), inDoubleReg(1), inDoubleReg(2),
                                            inDoubleReg(3), inDoubleReg(4), inDoubleReg(5), 
                                            inDoubleReg(6), inDoubleReg(7), inDoubleReg(8)};
   rtsi_->sendInputSetup(servoj_input);
 
   return true;
 }
+
+std::string RTSIControlInterface::inIntReg(int reg)
+{
+  return "input_int_register" + std::to_string(register_offset_ + reg);
+};
 
 std::string RTSIControlInterface::inDoubleReg(int reg)
 {

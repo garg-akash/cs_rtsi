@@ -5,6 +5,7 @@ Description: example script to rtsi control interface
 */
 #include <cs_rtsi/rtsi.h>
 #include <cs_rtsi/robot_state.h>
+#include <cs_rtsi/rtsi_receive_interface.h>
 #include <cs_rtsi/rtsi_control_interface.h>
 
 #include <chrono>
@@ -14,10 +15,17 @@ const bool VERBOSE = true;
 
 int main(int argc, char const *argv[])
 {
-	std::string hostip = "192.168.133.129";
+	std::string hostip = "192.168.133.130";
+  std::vector<std::string> variables;
+  variables.push_back("actual_joint_positions");
+  double frequency = 250;
+
+  RTSIReceiveInterface rtsi_receive(hostip, frequency, variables);
+
 	RTSIControlInterface rtsi_ctrl(hostip); //freq is by default 250
   
-  std::vector<double> q(6,0);
+  // std::vector<double> q(6,0);
+  std::vector<double> q(rtsi_receive.getActualJointPositions());
   double dt = 1.0/250; // 4ms
   double lookahead_time = 0.1;
   double gain = 300;

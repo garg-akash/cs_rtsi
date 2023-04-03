@@ -29,6 +29,8 @@ public:
   
   bool servoJ(const std::vector<double> &q, double time = 0.1, double lookahead_time = 0.08, double gain = 300);
 
+  std::string inIntReg(int reg);
+
   std::string inDoubleReg(int reg);
 
   void waitFunction(const std::chrono::steady_clock::time_point& t_start);

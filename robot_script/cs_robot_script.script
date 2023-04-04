@@ -33,7 +33,6 @@ def thread_servoj():
     end
 end
 
-
 def read_cmd():
     return read_input_integer_register(0)
 end
@@ -44,6 +43,14 @@ def read_q_from_registers(index):
         q[i] = read_input_float_register(index + i)
     end
     return q
+end
+
+def signal_ready():
+    write_output_integer_register(0, 1)
+end
+
+def signal_done_with_cmd():
+    write_output_integer_register(0, 2)
 end
 
 def process_cmd():
@@ -75,21 +82,39 @@ def process_cmd():
         textmsg("Received stop script!")
     end
 
+    if cmd != 255:
+        signal_done_with_cmd()
+    end
+
     return cmd != 255
 end
 
 # MAIN_LOOP_BEGINS
 textmsg("CS RTSI Robot Script Started")
 main_running = True
+executing_cmd = False
+signal_ready()
 
 while main_running:
     #print(main_running)
     cmd = read_cmd()
     print(cmd)
-    #if cmd == 11:
-    #    main_running = process_cmd()
-    #end
-    main_running = process_cmd()
+    if cmd == 11:
+        # these are realtime cmds
+        main_running = process_cmd()
+        signal_ready()
+    else:
+        if cmd == 0:
+            # NO_CMD
+            executing_cmd = False
+            signal_ready()
+        else:
+            if not executing_cmd:
+                main_running = process_cmd()
+            end
+            executing_cmd = True
+        end
+    end
     sync()
 end
 textmsg("CS RTSI Robot Script Terminated")

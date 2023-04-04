@@ -156,6 +156,11 @@ void RTSI::send(const RobotCommand &robot_cmd)
   std::vector<char> cmd_packed;
   // cmd_packed = RTSIUtility::packInt32(robot_cmd.type_);
 
+  if (robot_cmd.type_ == RobotCommand::NO_CMD)
+  {
+    cmd_packed = RTSIUtility::packInt32(robot_cmd.type_);
+  }
+
   // if (robot_cmd.type_ == RobotCommand::FT_RTSI_INPUT_ENABLE ||
   //     robot_cmd.type_ == RobotCommand::ENABLE_EXTERNAL_FT_SENSOR)
   // {

@@ -1,7 +1,7 @@
 /*
 Author: Elite_akashgarg
 CreateDate: 2023-02-09
-Description: example script to rtsi control interface
+Description: example script to rtsi control interface - servoJ command
 */
 #include <cs_rtsi/rtsi.h>
 #include <cs_rtsi/robot_state.h>
@@ -19,8 +19,8 @@ int main(int argc, char const *argv[])
   std::vector<std::string> variables;
   variables.push_back("actual_joint_positions");
   double frequency = 250;
-
-  RTSIReceiveInterface rtsi_receive(hostip, frequency, variables);
+  bool verbose = true;
+  RTSIReceiveInterface rtsi_receive(hostip, frequency, variables, verbose);
 
 	RTSIControlInterface rtsi_ctrl(hostip); //freq is by default 250
   

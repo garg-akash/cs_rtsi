@@ -1,21 +1,40 @@
 import threading
 
 global lock
+
 global thread_servoj_handle 
 global servoj_q
 global servoj_dt
 global servoj_lookahead_time
 global servoj_gain
 
+global thread_move_handle 
+global move_type
+global move_q
+global move_acc
+global move_vel
+global move_time
+global move_radius
+
 lock = threading.Lock()
+
 thread_servoj_handle = 0
 servoj_q = [0,0,0,0,0,0]
 servoj_dt = 0.004
 servoj_lookahead_time = 0.1
 servoj_gain = 300
 
+thread_move_handle = 0
+move_type = 0
+move_q = [0,0,0,0,0,0]
+move_acc = 1.4
+move_vel = 1.05
+move_time = 0
+move_radius = 0
+
 def thread_servoj():
     while (True):
+        global lock
         global servoj_q
         global servoj_dt
         global servoj_lookahead_time
@@ -31,6 +50,45 @@ def thread_servoj():
         servoj(q, dt, lookahead_time, gain)
         #sync()
     end
+end
+
+def thread_move():
+    textmsg("move thread started")
+    # signal_async_operation_started()
+    while(True):
+        global lock
+        global move_type
+        global thread_move_handle
+        if move_type == o:
+            global move_q
+            global move_acc
+            global move_vel
+            global move_time
+            global move_radius
+            movej(move_q, move_acc, move_vel, move_time, move_radius)
+        end
+        lock.acquire()
+        thread_move_handle = 0
+        textmsg("move thread finished")
+        lock.release()
+        break
+    end
+    # signal_async_operation_finished
+end
+
+def stop_async_move():
+    global lock
+    global thread_move_handle
+
+    lock.acquire()
+    if thread_move_handle != 0:
+        global thread_move_handle
+        textmsg("stopping async move command")
+        stop_thread(thread_move_handle)
+        thread_move_handle = 0
+        # signal_async_operation_finished()
+    end
+    lock.release()
 end
 
 def read_cmd():
@@ -55,9 +113,45 @@ end
 
 def process_cmd():
     cmd == read_cmd()
-    if cmd == 11:
-    # servoj command
+
+    if cmd == 1:
+        textmsg("executing movej")
+        q = read_q_from_registers(0)
+        acceleration = read_input_float_register(6)
+        velocity = read_input_float_register(7)
+        time = read_input_float_register(8)
+        radius = read_input_float_register(9)
+        async = read_input_integer_register(1)
+        stop_async_move()
+
+        if async == 1:
+            global lock
+            global move_type
+            global move_q
+            global move_acc
+            global move_vel
+            global move_time
+            global move_radius
+
+            lock.acquire()
+            move_type = 0
+            move_q = q
+            move_acc = acceleration
+            move_vel = velocity
+            move_time = time
+            move_radius = radius
+            lock.release()
+
+            global thread_move_handle
+            thread_move_handle = start_thread(thread_move,())
+        
+        else:
+            movej(q, a=acceleration, v=velocity, t=time, r=radius)
+            textmsg("movej (sync) finished")
+
+    elif cmd == 11:
         textmsg("executing servoj")
+        global lock
         global servoj_q
         global servoj_dt
         global servoj_lookahead_time
@@ -98,7 +192,7 @@ signal_ready()
 while main_running:
     #print(main_running)
     cmd = read_cmd()
-    print(cmd)
+    #print(cmd)
     if cmd == 11:
         # these are realtime cmds
         main_running = process_cmd()

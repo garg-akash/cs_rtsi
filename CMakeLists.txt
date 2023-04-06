@@ -33,10 +33,15 @@ target_include_directories(testPlugin PUBLIC include pluginScript)
 target_link_directories(testPlugin PRIVATE src)
 target_link_libraries(testPlugin csrtsi ${CMAKE_DL_LIBS} Boost::thread)
 
-add_executable(control_test examples/control_test.cpp)
-target_include_directories(control_test PUBLIC include)
-target_link_directories(control_test PRIVATE src)
-target_link_libraries(control_test csrtsi Threads::Threads)
+add_executable(servoj_test examples/servoj_test.cpp)
+target_include_directories(servoj_test PUBLIC include)
+target_link_directories(servoj_test PRIVATE src)
+target_link_libraries(servoj_test csrtsi Threads::Threads)
+
+add_executable(move_test examples/move_test.cpp)
+target_include_directories(move_test PUBLIC include)
+target_link_directories(move_test PRIVATE src)
+target_link_libraries(move_test csrtsi Threads::Threads)
 
 include(GNUInstallDirs)
 install(TARGETS csrtsi EXPORT csrtsi_targets

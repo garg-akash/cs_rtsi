@@ -25,6 +25,7 @@ public:
 	  enum Type
 	  {
 	    NO_CMD = 0,
+			MOVEJ = 1,
 	    SET_STD_DIGITAL_OUT = 13,
 	    SET_SPEED_SLIDER = 22,
 	    SET_STD_ANALOG_OUT = 23,
@@ -67,10 +68,11 @@ public:
 
 	  Type type_;// = NO_CMD;
 	  std::uint8_t recipe_id_;
+		std::int32_t async_;
 	  std::int32_t reg_int_val_;
 	  double reg_double_val_;
-      std::uint32_t reg_bit_val_x_to_y_;
-      bool reg_bit_val_;
+		std::uint32_t reg_bit_val_x_to_y_;
+		bool reg_bit_val_;
 	  std::vector<double> val_;
 	  std::uint16_t std_digital_out_;
 	  std::uint16_t std_digital_out_mask_;
@@ -107,6 +109,7 @@ public:
 	void connect();
 	void disconnect();
 	bool isConnected();
+	bool isStarted();
 	bool isDataAvailable();
 	bool negotiateProtocolVersion();
 	void send(const RobotCommand &robot_cmd);

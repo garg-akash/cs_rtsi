@@ -4,10 +4,12 @@
 #include <cs_rtsi/rtsi_utility.h>
 #include <string>
 #include <chrono>
+#include <boost/thread/thread.hpp>
 
 #define CS_CONTROLLER_READY_FOR_CMD 1
 #define CS_CONTROLLER_DONE_WITH_CMD 2
 #define CS_EXECUTION_TIMEOUT 300
+#define RTSI_START_SYNCHRONIZATION_TIMEOUT 50
 
 class RTSIControlInterface
 {
@@ -18,9 +20,12 @@ private:
   double delta_time_;
   bool verbose_;
   std::shared_ptr<RTSI> rtsi_;
+  std::atomic<bool> stop_thread_{false};
+  std::shared_ptr<boost::thread> th_;
   std::vector<std::string> state_names_;
   int register_offset_;
   std::shared_ptr<RobotState> robot_state_;
+  size_t no_bytes_avail_cnt_;
 
 public:
   RTSIControlInterface(std::string hostip, double frequency = 250, bool verbose = true);
@@ -47,13 +52,21 @@ public:
     STOPPED = 3
   };
 
+  void disconnect();
+
   bool sendCommand(const RTSI::RobotCommand &cmd);
 
   bool setupRecipes(const double &frequency);
+
+  void receiveCallback();
   
-  bool servoJ(const std::vector<double> &q, double time = 0.1, double lookahead_time = 0.08, double gain = 300);
+  bool servoJ(const std::vector<double> &q, double time = 0.1, double lookahead_time = 0.08,
+             double gain = 300);
 
   void sendClearCommand();
+
+  bool moveJ(const std::vector<double> &q, double acceleration = 1.4, double speed = 1.05,
+            double time = 0, double radius = 0, bool async = false);
 
   std::string inIntReg(int reg);
 

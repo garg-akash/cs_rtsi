@@ -271,7 +271,7 @@ bool RTSIControlInterface::moveJ(const std::vector<double> &q, double accelerati
 
   RTSI::RobotCommand robot_cmd;
   robot_cmd.type_ = RTSI::RobotCommand::Type::MOVEJ;
-  robot_cmd.recipe_id_ = RTSI::RobotCommand::Recipe::RECIPE_3;
+  robot_cmd.recipe_id_ = RTSI::RobotCommand::Recipe::RECIPE_1;
   if(async)
     robot_cmd.async_ = 1;
   else
@@ -291,6 +291,11 @@ bool RTSIControlInterface::sendCommand(const RTSI::RobotCommand &cmd)
   if (!robot_state_->getStateData("runtime_state", runtime_state))
     throw std::runtime_error("unable to get state data for specified key: runtime_state");
   
+  if(runtime_state == RuntimeState::STOPPED)
+  {
+    sendClearCommand();
+    return false;
+  }
   // TODO : use runtime_state to see if robot is running/stopped
   
   if(cmd.type_ == RTSI::RobotCommand::Type::SERVOJ)
@@ -331,6 +336,7 @@ bool RTSIControlInterface::sendCommand(const RTSI::RobotCommand &cmd)
       }
       std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
+    std::cout << "Cmd executed\n";
   }
   // Make controller ready for next command
   sendClearCommand();

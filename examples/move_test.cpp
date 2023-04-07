@@ -9,13 +9,10 @@ Description: example script to rtsi control interface - move commands
 
 #include <chrono>
 
-const int PORT = 30004;
-const bool VERBOSE = true;
+std::string hostip = "192.168.133.130";
 
 int main(int argc, char const *argv[])
 {
-	std::string hostip = "192.168.133.130";
-
 	RTSIControlInterface rtsi_ctrl(hostip); //freq is by default 250
   
   std::vector<double> move_q1;

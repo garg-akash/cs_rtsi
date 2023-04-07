@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
 	RTSIControlInterface rtsi_ctrl(hostip); //freq is by default 250
   
   // std::vector<double> q(6,0);
-  std::vector<double> q(rtsi_receive.getActualJointPositions());
+  std::vector<double> q = rtsi_receive.getActualJointPositions();
   double dt = 1.0/250; // 4ms
   double lookahead_time = 0.1;
   double gain = 300;

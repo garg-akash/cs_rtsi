@@ -15,6 +15,17 @@ int main(int argc, char const *argv[])
 {
 	RTSIControlInterface rtsi_ctrl(hostip); //freq is by default 250
   
+  std::vector<double> move_p;
+  move_p.push_back(0.41951);
+  move_p.push_back(-0.16);
+  move_p.push_back(0.25745);
+  move_p.push_back(-3.11757);
+  move_p.push_back(-0);
+  move_p.push_back(-1.5708);
+
+  rtsi_ctrl.moveL(move_p,1,1,0,0);
+  std::cout << "Moved to p1\n";
+
   std::vector<double> move_q1;
   move_q1.push_back(0);
   move_q1.push_back(-1.57);
@@ -23,14 +34,14 @@ int main(int argc, char const *argv[])
   move_q1.push_back(1.57);
   move_q1.push_back(0);
 
-  rtsi_ctrl.moveJ(move_q1,5,1,0,0);
+  rtsi_ctrl.moveJ(move_q1,1,1,0,0);
   std::cout << "Moved to q1\n";
 
   double dt = 1.0/250; // 4ms
   double lookahead_time = 0.1;
   double gain = 300;
 
-  for(int i = 0; i < 100; i++)
+  for(int i = 0; i < 10; i++)
   {
     std::chrono::steady_clock::time_point t_start = std::chrono::steady_clock::now();
     rtsi_ctrl.servoJ(move_q1, dt, lookahead_time, gain);
@@ -38,6 +49,10 @@ int main(int argc, char const *argv[])
     std::cout << "servoj took : " << std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::steady_clock::now() - t_start).count() << "s\n";
     sleep(1);
   }
+
+  // rtsi_ctrl.stopScript();
+  // std::cout << "Script stopped\n";
+
   std::cout << "Commands executed\n";
 	return 0;
 }

@@ -9,6 +9,7 @@
 #define CS_CONTROLLER_READY_FOR_CMD 1
 #define CS_CONTROLLER_DONE_WITH_CMD 2
 #define CS_EXECUTION_TIMEOUT 300
+#define CS_GET_READY_TIMEOUT 3
 #define RTSI_START_SYNCHRONIZATION_TIMEOUT 50
 
 class RTSIControlInterface
@@ -67,6 +68,11 @@ public:
 
   bool moveJ(const std::vector<double> &q, double acceleration = 1.4, double speed = 1.05,
             double time = 0, double radius = 0, bool async = false);
+
+  bool moveL(const std::vector<double> &pose, double acceleration = 1, double speed = 1.05,
+            double time = 0, double radius = 0, bool async = false);
+
+  void stopScript();
 
   std::string inIntReg(int reg);
 

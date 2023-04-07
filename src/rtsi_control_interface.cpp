@@ -271,7 +271,7 @@ bool RTSIControlInterface::moveJ(const std::vector<double> &q, double accelerati
 
   RTSI::RobotCommand robot_cmd;
   robot_cmd.type_ = RTSI::RobotCommand::Type::MOVEJ;
-  robot_cmd.recipe_id_ = RTSI::RobotCommand::Recipe::RECIPE_1;
+  robot_cmd.recipe_id_ = RTSI::RobotCommand::Recipe::RECIPE_3;
   if(async)
     robot_cmd.async_ = 1;
   else
@@ -282,6 +282,34 @@ bool RTSIControlInterface::moveJ(const std::vector<double> &q, double accelerati
   robot_cmd.val_.push_back(time);
   robot_cmd.val_.push_back(radius);
   return sendCommand(robot_cmd);
+}
+
+bool RTSIControlInterface::moveL(const std::vector<double> &pose, double acceleration, 
+                                double speed, double time, double radius, bool async)
+{
+  // TODO : verify limits
+
+  RTSI::RobotCommand robot_cmd;
+  robot_cmd.type_ = RTSI::RobotCommand::Type::MOVEL;
+  robot_cmd.recipe_id_ = RTSI::RobotCommand::Recipe::RECIPE_3;
+  if(async)
+    robot_cmd.async_ = 1;
+  else
+    robot_cmd.async_ = 0;
+  robot_cmd.val_ = pose;
+  robot_cmd.val_.push_back(acceleration);
+  robot_cmd.val_.push_back(speed);
+  robot_cmd.val_.push_back(time);
+  robot_cmd.val_.push_back(radius);
+  return sendCommand(robot_cmd);
+}
+
+void RTSIControlInterface::stopScript()
+{
+  RTSI::RobotCommand clear_cmd;
+  clear_cmd.type_ = RTSI::RobotCommand::Type::STOP_SCRIPT;
+  clear_cmd.recipe_id_ = RTSI::RobotCommand::Recipe::RECIPE_2;
+  rtsi_->send(clear_cmd);
 }
 
 bool RTSIControlInterface::sendCommand(const RTSI::RobotCommand &cmd)
@@ -296,51 +324,100 @@ bool RTSIControlInterface::sendCommand(const RTSI::RobotCommand &cmd)
     sendClearCommand();
     return false;
   }
-  // TODO : use runtime_state to see if robot is running/stopped
   
-  if(cmd.type_ == RTSI::RobotCommand::Type::SERVOJ)
+  if(isProgramRunning())
   {
-    rtsi_->send(cmd);
+    while(getControlScriptState() != CS_CONTROLLER_READY_FOR_CMD)
+    {
+      if(isProtectiveStopped() || isEmergencyStopped())
+      {
+        sendClearCommand();
+        return false;
+      }
+
+      auto current_time = std::chrono::steady_clock::now();
+      auto duration = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time).count();
+      if (duration > CS_GET_READY_TIMEOUT)
+      {
+        sendClearCommand();
+        return false;
+      }
+    }
+
+    if(cmd.type_ == RTSI::RobotCommand::Type::SERVOJ)
+    {
+      rtsi_->send(cmd);
+      return true;
+    }
+    else
+    {
+      rtsi_->send(cmd);
+
+      if( cmd.type_ != RTSI::RobotCommand::Type::STOP_SCRIPT)
+      {
+        start_time = std::chrono::steady_clock::now();
+        while(getControlScriptState() != CS_CONTROLLER_DONE_WITH_CMD)
+        {
+          // if script causes an error, then it may be possible that the script
+          // no longer runs and we don't receive the DONE_WITH_CMD signal
+          if (!isProgramRunning())
+          {
+            std::cerr << "RTSIControlInterface: CS control script is not running!" << std::endl;
+            sendClearCommand();
+            return false;
+          }
+
+          if (isProtectiveStopped() || isEmergencyStopped())
+          {
+            sendClearCommand();
+            return false;
+          }
+
+          // Waiting to give controller time to finish or timeout
+          auto current_time = std::chrono::steady_clock::now();
+          auto duration = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time).count();
+          if (duration > CS_EXECUTION_TIMEOUT)
+          {
+            sendClearCommand();
+            return false;
+          }
+          std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+        std::cout << "Cmd executed\n";
+      }
+      else
+      {
+        while(isProgramRunning())
+        {
+          if(isProtectiveStopped() || isEmergencyStopped())
+          {
+            sendClearCommand();
+            return false;
+          }
+
+          // Waiting to give controller time to finish or timeout
+          auto current_time = std::chrono::steady_clock::now();
+          auto duration = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time).count();
+          if (duration > CS_EXECUTION_TIMEOUT)
+          {
+            sendClearCommand();
+            return false;
+          }
+          std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+      }
+    }
+    // Make controller ready for next command
+    sendClearCommand();
     return true;
   }
   else
   {
-    rtsi_->send(cmd);
-
-    //TODO : use STOP_SCRIPT test case
-    start_time = std::chrono::steady_clock::now();
-    while(getControlScriptState() != CS_CONTROLLER_DONE_WITH_CMD)
-    {
-      // if script causes an error, then it may be possible that the script
-      // no longer runs and we don't receive the DONE_WITH_CMD signal
-      if (!isProgramRunning())
-      {
-        std::cerr << "RTSIControlInterface: CS control script is not running!" << std::endl;
-        sendClearCommand();
-        return false;
-      }
-
-      if (isProtectiveStopped() || isEmergencyStopped())
-      {
-        sendClearCommand();
-        return false;
-      }
-
-      // Waiting to give controller time to finish or timeout
-      auto current_time = std::chrono::steady_clock::now();
-      auto duration = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time).count();
-      if (duration > CS_EXECUTION_TIMEOUT)
-      {
-        sendClearCommand();
-        return false;
-      }
-      std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    }
-    std::cout << "Cmd executed\n";
+    std::cerr << "RTSIControlInterface: CS control script is not running!" << std::endl;
+    sendClearCommand();
+    return false;
   }
-  // Make controller ready for next command
-  sendClearCommand();
-  return true;
 }
 
 void RTSIControlInterface::waitFunction(const std::chrono::steady_clock::time_point& t_start)

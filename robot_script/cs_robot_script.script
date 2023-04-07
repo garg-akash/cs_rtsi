@@ -11,6 +11,7 @@ global servoj_gain
 global thread_move_handle 
 global move_type
 global move_q
+global move_p
 global move_acc
 global move_vel
 global move_time
@@ -27,6 +28,7 @@ servoj_gain = 300
 thread_move_handle = 0
 move_type = 0
 move_q = [0,0,0,0,0,0]
+move_p = [0,0,0,0,0,0]
 move_acc = 1.4
 move_vel = 1.05
 move_time = 0
@@ -66,6 +68,14 @@ def thread_move():
             global move_time
             global move_radius
             movej(move_q, move_acc, move_vel, move_time, move_radius)
+
+        elif move_type == 2:
+            global move_p
+            global move_acc
+            global move_vel
+            global move_time
+            global move_radius
+            movel(move_p, move_acc, move_vel, move_time, move_radius)
         end
         lock.acquire()
         thread_move_handle = 0
@@ -148,9 +158,46 @@ def process_cmd():
         else:
             movej(q, a=acceleration, v=velocity, t=time, r=radius)
             textmsg("movej (sync) finished")
+        end
+
+    elif cmd == 3:
+        textmsg("executing movel")
+        pose = read_q_from_registers(0)
+        acceleration = read_input_float_register(6)
+        velocity = read_input_float_register(7)
+        time = read_input_float_register(8)
+        radius = read_input_float_register(9)
+        async = read_input_integer_register(1)
+        stop_async_move()
+
+        if async == 1:
+            global lock
+            global move_type
+            global move_p
+            global move_acc
+            global move_vel
+            global move_time
+            global move_radius
+
+            lock.acquire()
+            move_type = 2
+            move_p = pose
+            move_acc = acceleration
+            move_vel = velocity
+            move_time = time
+            move_radius = radius
+            lock.release()
+
+            global thread_move_handle
+            thread_move_handle = start_thread(thread_move,())
+        
+        else:
+            movel(pose, a=acceleration, v=velocity, t=time, r=radius)
+            textmsg("movel (sync) finished")
+        end
 
     elif cmd == 11:
-        textmsg("executing servoj")
+        # executing servoj
         global lock
         global servoj_q
         global servoj_dt

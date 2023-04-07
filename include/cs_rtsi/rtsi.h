@@ -26,6 +26,7 @@ public:
 	  {
 	    NO_CMD = 0,
 			MOVEJ = 1,
+			MOVEL = 3,
 	    SET_STD_DIGITAL_OUT = 13,
 	    SET_SPEED_SLIDER = 22,
 	    SET_STD_ANALOG_OUT = 23,
@@ -36,7 +37,8 @@ public:
 			SET_INPUT_BIT_REGISTER = 82,
 	    WATCHDOG = 99,
 			SET_EXTERNAL_FORCE_TORQUE = 96,
-			SERVOJ = 11
+			SERVOJ = 11,
+			STOP_SCRIPT = 255
 	  };
 
 	  enum Recipe

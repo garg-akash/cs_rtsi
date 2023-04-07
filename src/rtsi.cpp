@@ -164,7 +164,7 @@ void RTSI::send(const RobotCommand &robot_cmd)
   std::vector<char> cmd_packed;
   // cmd_packed = RTSIUtility::packInt32(robot_cmd.type_);
 
-  if (robot_cmd.type_ == RobotCommand::NO_CMD)
+  if (robot_cmd.type_ == RobotCommand::NO_CMD || robot_cmd.type_ == RobotCommand::STOP_SCRIPT)
   {
     cmd_packed = RTSIUtility::packInt32(robot_cmd.type_);
   }
@@ -210,7 +210,7 @@ void RTSI::send(const RobotCommand &robot_cmd)
                       std::make_move_iterator(vector_nd_packed.end()));
   }
 
-  if (robot_cmd.type_ == RobotCommand::MOVEJ)
+  if (robot_cmd.type_ == RobotCommand::MOVEJ || robot_cmd.type_ == RobotCommand::MOVEL)
   {
     std::vector<char> async_packed = RTSIUtility::packInt32(robot_cmd.async_);
     cmd_packed.insert(cmd_packed.end(), std::make_move_iterator(async_packed.begin()),

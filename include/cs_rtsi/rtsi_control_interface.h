@@ -74,6 +74,12 @@ public:
 
   void stopScript();
 
+  bool servoStop(double val = 10.0);
+
+  void stopJ(double val = 2.0, bool async = false);
+
+  void stopL(double val = 10.0, bool async = false);
+
   std::string inIntReg(int reg);
 
   std::string inDoubleReg(int reg);

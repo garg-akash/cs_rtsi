@@ -49,9 +49,8 @@ int main(int argc, char const *argv[])
     std::cout << "servoj took : " << std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::steady_clock::now() - t_start).count() << "s\n";
     sleep(1);
   }
-
-  // rtsi_ctrl.stopScript();
-  // std::cout << "Script stopped\n";
+  rtsi_ctrl.servoStop();
+  rtsi_ctrl.stopScript();
 
   std::cout << "Commands executed\n";
 	return 0;

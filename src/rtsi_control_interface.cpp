@@ -95,7 +95,7 @@ bool RTSIControlInterface::setupRecipes(const double &frequency)
   rtsi_->sendInputSetup(servoj_input);
 
   // Recipe 2
-  std::vector<std::string> no_cmd_input = {inIntReg(0)};
+  std::vector<std::string> no_cmd_input = {inIntReg(0)}; // also for stop_script
   rtsi_->sendInputSetup(no_cmd_input);
 
   // Recipe 3
@@ -104,6 +104,14 @@ bool RTSIControlInterface::setupRecipes(const double &frequency)
                                           inDoubleReg(6), inDoubleReg(7), inDoubleReg(8),
                                           inDoubleReg(9), inIntReg(1)};
   rtsi_->sendInputSetup(movej_input);
+
+  // Recipe 4
+  std::vector<std::string> servo_stop_input = {inIntReg(0), inDoubleReg(0)};
+  rtsi_->sendInputSetup(servo_stop_input);
+
+  // Recipe 5
+  std::vector<std::string> stopl_stopj_input = {inIntReg(0), inDoubleReg(0), inIntReg(1)};
+  rtsi_->sendInputSetup(stopl_stopj_input);
 
   return true;
 }
@@ -306,10 +314,45 @@ bool RTSIControlInterface::moveL(const std::vector<double> &pose, double acceler
 
 void RTSIControlInterface::stopScript()
 {
-  RTSI::RobotCommand clear_cmd;
-  clear_cmd.type_ = RTSI::RobotCommand::Type::STOP_SCRIPT;
-  clear_cmd.recipe_id_ = RTSI::RobotCommand::Recipe::RECIPE_2;
-  rtsi_->send(clear_cmd);
+  RTSI::RobotCommand robot_cmd;
+  robot_cmd.type_ = RTSI::RobotCommand::Type::STOP_SCRIPT;
+  robot_cmd.recipe_id_ = RTSI::RobotCommand::Recipe::RECIPE_2;
+  sendCommand(robot_cmd);
+}
+
+bool RTSIControlInterface::servoStop(double val)
+{
+  RTSI::RobotCommand robot_cmd;
+  robot_cmd.type_ = RTSI::RobotCommand::SERVO_STOP;
+  robot_cmd.recipe_id_ = RTSI::RobotCommand::Recipe::RECIPE_4;
+  robot_cmd.val_.push_back(val);
+  return sendCommand(robot_cmd);
+}
+
+void RTSIControlInterface::stopJ(double val, bool async)
+{
+  RTSI::RobotCommand robot_cmd;
+  robot_cmd.type_ = RTSI::RobotCommand::Type::STOPJ;
+  robot_cmd.recipe_id_ = RTSI::RobotCommand::Recipe::RECIPE_5;
+  if(async)
+    robot_cmd.async_ = 1;
+  else
+    robot_cmd.async_ = 0;
+  robot_cmd.val_.push_back(val);
+  sendCommand(robot_cmd);
+}
+
+void RTSIControlInterface::stopL(double val, bool async)
+{
+  RTSI::RobotCommand robot_cmd;
+  robot_cmd.type_ = RTSI::RobotCommand::Type::STOPL;
+  robot_cmd.recipe_id_ = RTSI::RobotCommand::Recipe::RECIPE_5;
+  if(async)
+    robot_cmd.async_ = 1;
+  else
+    robot_cmd.async_ = 0;
+  robot_cmd.val_.push_back(val);
+  sendCommand(robot_cmd);
 }
 
 bool RTSIControlInterface::sendCommand(const RTSI::RobotCommand &cmd)

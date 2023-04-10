@@ -469,11 +469,11 @@ void RTSIReceiveInterface::receiveCallback()
     		boost::system::error_code ec = rtsi_->receiveData(robot_state_);
     		if(ec)
     		{
-      			if(ec == boost::asio::error::eof)
-      			{
-        			std::cerr << "RTSIReceiveInterface: Robot closed the connection!" << std::endl;
-      			}
-      			throw std::system_error(ec);
+					if(ec == boost::asio::error::eof)
+					{
+						std::cerr << "RTSIReceiveInterface: Robot closed the connection!" << std::endl;
+					}
+					throw std::system_error(ec);
     		}
   		}
   		else
@@ -481,9 +481,9 @@ void RTSIReceiveInterface::receiveCallback()
     		// Register that data was not available in this cycle
     		no_bytes_avail_cnt_++;
     		// If at least 2ms has passed without data available, try to read data again to detect de-synchronization.
-    		if (no_bytes_avail_cnt_ > 20)
+    		if (no_bytes_avail_cnt_ > 40)
     		{
-      			boost::system::error_code ec = rtsi_->receiveData(robot_state_);
+      		boost::system::error_code ec = rtsi_->receiveData(robot_state_);
      			if(ec)
     			{
       			if(ec == boost::asio::error::eof)

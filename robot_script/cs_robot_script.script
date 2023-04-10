@@ -17,6 +17,10 @@ global move_vel
 global move_time
 global move_radius
 
+global thread_stop_handle
+global stop_type
+global stop_dec
+
 lock = threading.Lock()
 
 thread_servoj_handle = 0
@@ -33,6 +37,10 @@ move_acc = 1.4
 move_vel = 1.05
 move_time = 0
 move_radius = 0
+
+thread_stop_handle = 0
+stop_type = 0 # stopj = 0; stopl = 1
+stop_dec = 0
 
 def thread_servoj():
     while (True):
@@ -61,7 +69,7 @@ def thread_move():
         global lock
         global move_type
         global thread_move_handle
-        if move_type == o:
+        if move_type == 0:
             global move_q
             global move_acc
             global move_vel
@@ -99,6 +107,71 @@ def stop_async_move():
         # signal_async_operation_finished()
     end
     lock.release()
+end
+
+def thread_stop():
+    textmsg("executing thread stop")
+    while(True):
+        global stop_type
+        if stop_type == 0:
+            stopj(stop_dec)
+        elif stop_type == 1:
+            stopl(stop_dec)
+        end
+
+        global thread_stop_handle
+
+        lock.acquire()
+        thread_stop_handle = 0
+        textmsg("finished thread stop")
+        lock.release()
+        break
+    end
+    # signal_async_operation_finished()
+end
+
+def exec_stopl_stopj(cmd, message):
+    deceleration_rate = read_input_float_register(0)
+    async = read_input_integer_register(1)
+    textmsg(message, async)
+    stop_move = True
+
+    global thread_stop_handle
+
+    lock.acquire()
+    if thread_stop_handle != 0:
+        global thread_stop_handle
+        stop_move = False
+        stop_thread(thread_stop_handle)
+        thread_stop_handle = 0
+        # signal_async_operation_finished()
+    end
+    lock.release()
+
+    if stop_move == True:
+        stop_async_move()
+    end
+
+    if async == 1:
+        global stop_type
+        global stop_dec
+        global thread_stop_handle
+
+        lock.acquire()
+        stop_type = 1
+        stop_dec = deceleration_rate
+        lock.release()
+
+        thread_stop_handle = start_thread(thread_stop,())
+
+    else:
+        global stop_type
+        if stop_type == 0:
+            stopj(deceleration_rate)
+        elif stop_type == 1:
+            stopl(deceleration_rate)
+        end
+    end
 end
 
 def read_cmd():
@@ -219,9 +292,29 @@ def process_cmd():
             thread_servoj_handle = start_thread(thread_servoj,())
         end
 
-    elif cmd == 255:
-        textmsg("Received stop script!")
-    end
+    elif cmd == 16:
+        textmsg("executing servo_stop")
+        global thread_servoj_handle
+        deceleration_rate = read_input_float_register(0)
+        
+        lock.acquire()
+        stop_thread(thread_servoj_handle)
+        thread_servoj_handle = 0
+        lock.release()
+
+        stopl(deceleration_rate)
+    
+    elif cmd == 33:
+        textmsg("executing stopl")
+        exec_stopl_stopj(cmd, "stopl async=")
+
+    elif cmd == 34:
+        textmsg("executing stopj")
+        exec_stopl_stopj(cmd, "stopj async=")
+
+    # elif cmd == 255:
+        # textmsg("Received stop script!")
+    # end
 
     if cmd != 255:
         signal_done_with_cmd()
@@ -231,7 +324,7 @@ def process_cmd():
 end
 
 # MAIN_LOOP_BEGINS
-textmsg("CS RTSI Robot Script Started")
+# textmsg("CS RTSI Robot Script Started")
 main_running = True
 executing_cmd = False
 signal_ready()
@@ -258,5 +351,5 @@ while main_running:
     end
     sync()
 end
-textmsg("CS RTSI Robot Script Terminated")
+# textmsg("CS RTSI Robot Script Terminated")
 # MAIN_LOOP_ENDS

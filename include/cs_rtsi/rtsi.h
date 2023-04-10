@@ -38,6 +38,9 @@ public:
 	    WATCHDOG = 99,
 			SET_EXTERNAL_FORCE_TORQUE = 96,
 			SERVOJ = 11,
+			SERVO_STOP = 16,
+			STOPL = 33,
+			STOPJ = 34,
 			STOP_SCRIPT = 255
 	  };
 

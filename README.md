@@ -9,11 +9,11 @@ The code was tested with Ubuntu 20.04. Different OS versions are possible but no
 
 `cd <CS_LIB>/`
 
-`https://github.com/garg-akash/cs_rtsi.git`
+`git clone https://github.com/garg-akash/cs_rtsi.git`
 
 ### Compile 
 
-`cd <CS_LIB>/`
+`cd <CS_LIB>/cs_rtsi`
 
 `mkdir build`
 

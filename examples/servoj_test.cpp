@@ -23,7 +23,7 @@ int main(int argc, char const *argv[])
   RTSIReceiveInterface rtsi_receive(hostip, frequency, variables, verbose);
 
 	RTSIControlInterface rtsi_ctrl(hostip); //freq is by default 250
-  
+
   // std::vector<double> q(6,0);
   std::vector<double> q = rtsi_receive.getActualJointPositions();
   double dt = 1.0/250; // 4ms
@@ -34,8 +34,8 @@ int main(int argc, char const *argv[])
   {
     std::chrono::steady_clock::time_point t_start = std::chrono::steady_clock::now();
     rtsi_ctrl.servoJ(q, dt, lookahead_time, gain);
-    q[1] -= 0.01;
-    q[3] -= 0.01;
+    q[0] -= 0.01;
+    q[4] -= 0.01;
     std::cout << "took : " << std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::steady_clock::now() - t_start).count() << "s\n";
     sleep(1);
   }

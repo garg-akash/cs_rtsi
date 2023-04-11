@@ -27,7 +27,12 @@ RTSIReceiveInterface::RTSIReceiveInterface(std::string hotsip, double frequency,
 
 	port_ = 30004;
 
-  rtsi_ = RTSI::getRTSIInstance(hostip_, port_, verbose_);
+  // rtsi_ = RTSI::getRTSIInstance(hostip_, port_, verbose_);
+	rtsi_ = std::make_shared<RTSI>(hostip_, port_, verbose_);
+
+	rtsi_->connect();
+	
+	rtsi_->negotiateProtocolVersion();
   
 	delta_time_ = 1 / frequency_;
 
